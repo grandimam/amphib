@@ -12,7 +12,6 @@
     <aside class="sidebar">
       <div class="sidebar-header">
         <a href="index.html" class="logo">Amphib 🐸</a>
-        <span class="tagline">a better breed of hiring agent</span>
       </div>
       <nav class="sidebar-nav">
         <a href="index.html" class="{% if page == 'index' %}active{% endif %}">Home</a>
@@ -23,11 +22,13 @@
         <a href="contributing.html" class="{% if page == 'contributing' %}active{% endif %}">Contributing</a>
       </nav>
       <div class="sidebar-footer">
-        <a href="https://amphib.dev" target="_blank">amphib.dev</a>
-        <a href="LICENSE">MIT License</a>
+        <a href="https://github.com/interviewstreet/hiring-agent" target="_blank">Built on Hiring Agent</a>
       </div>
     </aside>
     <main class="content">
+      <div class="origin-notice">
+        🐸 <strong>Amphib</strong> is built on <a href="https://github.com/interviewstreet/hiring-agent" target="_blank">Hiring Agent</a> by HackerRank — and we're making it better.
+      </div>
       {% block content %}{% endblock %}
     </main>
   </div>

@@ -12,7 +12,6 @@
     <aside class="sidebar">
       <div class="sidebar-header">
         <a href="index.html" class="logo">Amphib 🐸</a>
-        <span class="tagline">a better breed of hiring agent</span>
       </div>
       <nav class="sidebar-nav">
         <a href="index.html" class="">Home</a>
@@ -23,59 +22,49 @@
         <a href="contributing.html" class="">Contributing</a>
       </nav>
       <div class="sidebar-footer">
-        <a href="https://amphib.dev" target="_blank">amphib.dev</a>
-        <a href="LICENSE">MIT License</a>
+        <a href="https://github.com/interviewstreet/hiring-agent" target="_blank">Built on Hiring Agent</a>
       </div>
     </aside>
     <main class="content">
+      <div class="origin-notice">
+        🐸 <strong>Amphib</strong> is built on <a href="https://github.com/interviewstreet/hiring-agent" target="_blank">Hiring Agent</a> by HackerRank — and we're making it better.
+      </div>
       
 
 # Architecture
 
-Amphib is a five-stage pipeline. Each stage is independent and can be tested, cached, or replaced in isolation.
+Five stages. Each is independent, testable, and replaceable.
 
-## Pipeline overview
+## 1. PDF → Markdown
 
-### 1) PDF → Markdown
+`pymupdf_rag.py` and `pdf.py` turn PDF pages into Markdown using PyMuPDF. Headings, links, tables — everything survives.
 
-`pymupdf_rag.py` and `pdf.py` read a resume PDF using PyMuPDF and convert each page to Markdown-like text. The `to_markdown` routine handles headings, links, tables, and basic formatting — nothing lost in translation.
+## 2. Markdown → JSON
 
-### 2) Markdown → Structured JSON
+`pdf.py` sends each section (work, education, skills, etc.) to the LLM via Jinja templates in `prompts/templates/`. Results assemble into a typed `JSONResume` object.
 
-`pdf.py` feeds each resume section (basics, work, education, skills, projects, awards) to the LLM through Jinja templates in `prompts/templates/`. The `PDFHandler` assembles the results into a typed `JSONResume` object defined in `models.py`.
+## 3. GitHub enrichment
 
-### 3) GitHub enrichment
+`github.py` finds the candidate's GitHub handle, fetches profile and repos, classifies projects, and asks the LLM to pick the 7 most meaningful ones.
 
-`github.py` extracts the candidate's GitHub username from their resume profiles, fetches their profile and repositories via the GitHub API, classifies each project, and asks the LLM to select exactly 7 meaningful ones (minimum commit threshold, favors genuine contributions).
+## 4. Evaluation
 
-### 4) Evaluation
+`evaluator.py` scores across four axes — open source, personal projects, production experience, technical skills — with bonus marks, deductions, and cited evidence.
 
-`evaluator.py` scores across four axes using templated prompts that encode fairness rules:
+## 5. Output
 
-- **open_source** — contributions to community projects
-- **self_projects** — personal work and side projects
-- **production** — real-world professional experience
-- **technical_skills** — depth and breadth of listed skills
-
-Plus bonus marks and deductions, all with cited evidence drawn from the enriched data.
-
-### 5) Output
-
-`score.py` orchestrates everything and prints a readable report. With `DEVELOPMENT_MODE=True` (set in `config.py`), it also:
-
-- Caches intermediate JSON under `cache/`
-- Appends results to `resume_evaluations.csv`
+`score.py` prints a readable summary. With `DEVELOPMENT_MODE=True` it also caches results and appends to `resume_evaluations.csv`.
 
 ## Key modules
 
-| Module | Responsibility |
+| Module | Role |
 |---|---|
-| `models.py` | Pydantic schemas and LLM provider interfaces (Ollama, Gemini) |
-| `llm_utils.py` | Provider initialisation and response cleanup |
-| `transform.py` | Normalises loose LLM JSON to JSON Resume format |
-| `prompt.py` | Routes provider requests to the correct prompt templates |
-| `prompts/` | All Jinja templates for extraction and scoring |
-| `config.py` | Single flag for development mode (caching + CSV) |
+| `models.py` | Pydantic schemas + LLM provider interfaces |
+| `llm_utils.py` | Provider init + response cleanup |
+| `transform.py` | Normalises LLM JSON to JSON Resume format |
+| `prompt.py` | Routes to the right prompt templates |
+| `prompts/` | All Jinja templates for extraction + scoring |
+| `config.py` | Dev mode toggle (caching + CSV) |
 
 
     </main>

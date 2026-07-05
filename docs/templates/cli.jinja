@@ -4,9 +4,7 @@
 
 # CLI Usage
 
-## End-to-end scoring
-
-The single entry point. Point it at a resume PDF.
+## Score a resume
 
 ```bash
 python score.py /path/to/resume.pdf
@@ -14,15 +12,13 @@ python score.py /path/to/resume.pdf
 
 ### What happens
 
-1. **PDF extraction** — converted to Markdown, cached to `cache/resumecache_<basename>.json` (when development mode is on).
-2. **GitHub enrichment** — if a GitHub profile is found in the resume, repositories are fetched and cached to `cache/githubcache_<basename>.json`.
-3. **Evaluation** — the evaluator scores the candidate and prints a report. In development mode, a CSV row is appended to `resume_evaluations.csv`.
+1. PDF is extracted to Markdown (cached in `cache/` if dev mode is on).
+2. GitHub data is fetched and cached.
+3. An evaluation report is printed. Dev mode also appends to `resume_evaluations.csv`.
 
 ### Example output
 
 ```
-──  Evaluation Report ──────────────────────────────
-
   open_source        ████████░░  8 / 10
   self_projects      ██████░░░░  6 / 10
   production         ██████████  10 / 10
@@ -34,23 +30,21 @@ python score.py /path/to/resume.pdf
   total              32 / 40
 ```
 
-## Development mode
+## Dev mode
 
-Toggle caching and CSV export in `config.py`:
+In `config.py`:
 
 ```python
 DEVELOPMENT_MODE = True   # enables cache + CSV
 ```
 
-Leave it on during iteration. Results accumulate in `resume_evaluations.csv` for batch analysis.
+Leave it on during iteration. Results accumulate in `resume_evaluations.csv`.
 
 ## Caching
 
-Intermediate files are stored under `cache/`:
+- `cache/resumecache_<name>.json` — parsed resume
+- `cache/githubcache_<name>.json` — GitHub data
 
-- `cache/resumecache_<basename>.json` — parsed resume data
-- `cache/githubcache_<basename>.json` — fetched GitHub data
-
-Clear the cache directory to force re-extraction.
+Delete `cache/` to force a fresh run.
 
 {% endblock %}

@@ -18,6 +18,8 @@
 
 Amphib ingests a resume PDF, extracts structured data with an LLM, cross-references GitHub for ground truth, and produces an explainable score. It runs locally with Ollama or uses Gemini — your data stays with you.
 
+Amphib is built on [Hiring Agent](https://github.com/interviewstreet/hiring-agent) by HackerRank. We didn't just fork it — we're actively improving it, and every change is open source. If you like Hiring Agent, you'll love what's next.
+
 ## How it works
 
 ### 1. PDF → Text
@@ -121,14 +123,10 @@ DEVELOPMENT_MODE = True   # caches results, exports CSV
 
 **Gemini** — set `LLM_PROVIDER=gemini`, provide your key, pick a model like `gemini-2.0-flash`. Responses are adapted to a unified format.
 
-## Why "Amphib"?
-
-Because it lives in two worlds — the structured world of resumes and the messy reality of GitHub — and it's comfortable in both.
-
 ## License
 
 [MIT](LICENSE) © HackerRank
 
 ## Acknowledgments
 
-Amphib is built on [Hiring Agent](https://github.com/interviewstreet/hiring-agent) by HackerRank. Their open-source work made this possible.
+Amphib is built on [Hiring Agent](https://github.com/interviewstreet/hiring-agent) by HackerRank. Their open-source work made this possible — and we're committed to keeping it going.

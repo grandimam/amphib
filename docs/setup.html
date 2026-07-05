@@ -12,7 +12,6 @@
     <aside class="sidebar">
       <div class="sidebar-header">
         <a href="index.html" class="logo">Amphib 🐸</a>
-        <span class="tagline">a better breed of hiring agent</span>
       </div>
       <nav class="sidebar-nav">
         <a href="index.html" class="">Home</a>
@@ -23,37 +22,36 @@
         <a href="contributing.html" class="">Contributing</a>
       </nav>
       <div class="sidebar-footer">
-        <a href="https://amphib.dev" target="_blank">amphib.dev</a>
-        <a href="LICENSE">MIT License</a>
+        <a href="https://github.com/interviewstreet/hiring-agent" target="_blank">Built on Hiring Agent</a>
       </div>
     </aside>
     <main class="content">
+      <div class="origin-notice">
+        🐸 <strong>Amphib</strong> is built on <a href="https://github.com/interviewstreet/hiring-agent" target="_blank">Hiring Agent</a> by HackerRank — and we're making it better.
+      </div>
       
 
 # Setup
 
 ## Prerequisites
 
-- **Python 3.11+** — the repo pins `.python-version` to 3.11.13.
-- **One LLM backend:**
-  - [Ollama](https://ollama.com/) for local models (recommended)
-  - A [Gemini API key](https://aistudio.google.com/api-keys) if using Google's models
+- Python 3.11+
+- [Ollama](https://ollama.com/) (recommended) or a [Gemini API key](https://aistudio.google.com/api-keys)
 
-## Installation
+## Install
 
 ```bash
 git clone <your-repo-url> && cd amphib
-python -m venv .venv
-source .venv/bin/activate       # Linux / macOS
+python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Pull a model (Ollama)
+## Pull a model
 
 ```bash
-ollama pull gemma3:4b           # balanced — good starting point
-ollama pull gemma3:12b          # more capable, needs more RAM
-ollama pull gemma3:1b           # lightweight, fast
+ollama pull gemma3:4b      # balanced
+ollama pull gemma3:12b     # more capable
+ollama pull gemma3:1b      # lightweight
 ```
 
 ## Configure
@@ -62,14 +60,14 @@ ollama pull gemma3:1b           # lightweight, fast
 cp .env.example .env
 ```
 
-Edit `.env` to set your provider and credentials:
+Edit `.env`:
 
 | Variable | Values | Description |
 |---|---|---|
-| `LLM_PROVIDER` | `ollama` or `gemini` | Which backend to use |
+| `LLM_PROVIDER` | `ollama` or `gemini` | Backend choice |
 | `DEFAULT_MODEL` | e.g. `gemma3:4b` | Model name |
-| `GEMINI_API_KEY` | string | Required when using Gemini |
-| `GITHUB_TOKEN` | string | Optional — bumps API rate limits |
+| `GEMINI_API_KEY` | string | Required for Gemini |
+| `GITHUB_TOKEN` | string | Optional — higher API rate limits |
 
 ## Run
 

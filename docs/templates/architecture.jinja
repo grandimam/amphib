@@ -1,0 +1,52 @@
+{% extends "base.jinja" %}
+{% block title %}Architecture{% endblock %}
+{% block content %}
+
+# Architecture
+
+Amphib is a five-stage pipeline. Each stage is independent and can be tested, cached, or replaced in isolation.
+
+## Pipeline overview
+
+### 1) PDF → Markdown
+
+`pymupdf_rag.py` and `pdf.py` read a resume PDF using PyMuPDF and convert each page to Markdown-like text. The `to_markdown` routine handles headings, links, tables, and basic formatting — nothing lost in translation.
+
+### 2) Markdown → Structured JSON
+
+`pdf.py` feeds each resume section (basics, work, education, skills, projects, awards) to the LLM through Jinja templates in `prompts/templates/`. The `PDFHandler` assembles the results into a typed `JSONResume` object defined in `models.py`.
+
+### 3) GitHub enrichment
+
+`github.py` extracts the candidate's GitHub username from their resume profiles, fetches their profile and repositories via the GitHub API, classifies each project, and asks the LLM to select exactly 7 meaningful ones (minimum commit threshold, favors genuine contributions).
+
+### 4) Evaluation
+
+`evaluator.py` scores across four axes using templated prompts that encode fairness rules:
+
+- **open_source** — contributions to community projects
+- **self_projects** — personal work and side projects
+- **production** — real-world professional experience
+- **technical_skills** — depth and breadth of listed skills
+
+Plus bonus marks and deductions, all with cited evidence drawn from the enriched data.
+
+### 5) Output
+
+`score.py` orchestrates everything and prints a readable report. With `DEVELOPMENT_MODE=True` (set in `config.py`), it also:
+
+- Caches intermediate JSON under `cache/`
+- Appends results to `resume_evaluations.csv`
+
+## Key modules
+
+| Module | Responsibility |
+|---|---|
+| `models.py` | Pydantic schemas and LLM provider interfaces (Ollama, Gemini) |
+| `llm_utils.py` | Provider initialisation and response cleanup |
+| `transform.py` | Normalises loose LLM JSON to JSON Resume format |
+| `prompt.py` | Routes provider requests to the correct prompt templates |
+| `prompts/` | All Jinja templates for extraction and scoring |
+| `config.py` | Single flag for development mode (caching + CSV) |
+
+{% endblock %}

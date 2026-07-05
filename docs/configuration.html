@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configuration — Amphib Docs</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐸</text></svg>">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="logo">Amphib 🐸</a>
+        <span class="tagline">a better breed of hiring agent</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="index.html" class="">Home</a>
+        <a href="setup.html" class="">Setup</a>
+        <a href="architecture.html" class="">Architecture</a>
+        <a href="cli.html" class="">CLI Usage</a>
+        <a href="configuration.html" class="active">Configuration</a>
+        <a href="contributing.html" class="">Contributing</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="https://amphib.dev" target="_blank">amphib.dev</a>
+        <a href="LICENSE">MIT License</a>
+      </div>
+    </aside>
+    <main class="content">
+      
+
+# Configuration
+
+## Environment variables
+
+Copy the example file and edit:
+
+```bash
+cp .env.example .env
+```
+
+| Variable | Required | Default | Description |
+|---|---|---|---|
+| `LLM_PROVIDER` | Yes | `ollama` | `ollama` or `gemini` |
+| `DEFAULT_MODEL` | Yes | `gemma3:4b` | Model name passed to the provider |
+| `GEMINI_API_KEY` | When using Gemini | — | Your Google Gemini API key |
+| `GITHUB_TOKEN` | No | — | GitHub personal access token for higher API rate limits |
+
+## Provider mapping
+
+Provider routing lives in `prompt.py` and `models.py`:
+
+- **Ollama** — `models.OllamaProvider` wraps `ollama.chat` directly
+- **Gemini** — `models.GeminiProvider` adapts Gemini responses to a unified format
+
+## Development mode
+
+`config.py` has a single toggle:
+
+```python
+DEVELOPMENT_MODE = True   # enables caching + CSV export
+```
+
+When on:
+
+- Intermediate results are cached to `cache/` (speeds up iteration)
+- Each run appends a row to `resume_evaluations.csv`
+- Useful for batch processing and debugging
+
+## File layout
+
+```
+amphib/
+├── config.py           # development mode flag
+├── .env                # your local environment variables
+├── .env.example        # template for .env
+├── cache/              # cached intermediate results (gitignored)
+└── resume_evaluations.csv  # scored results (gitignored)
+```
+
+
+    </main>
+  </div>
+</body>
+</html>

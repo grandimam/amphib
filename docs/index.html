@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home — Amphib Docs</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐸</text></svg>">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="logo">Amphib 🐸</a>
+        <span class="tagline">a better breed of hiring agent</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="index.html" class="active">Home</a>
+        <a href="setup.html" class="">Setup</a>
+        <a href="architecture.html" class="">Architecture</a>
+        <a href="cli.html" class="">CLI Usage</a>
+        <a href="configuration.html" class="">Configuration</a>
+        <a href="contributing.html" class="">Contributing</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="https://amphib.dev" target="_blank">amphib.dev</a>
+        <a href="LICENSE">MIT License</a>
+      </div>
+    </aside>
+    <main class="content">
+      
+
+<div class="hero">
+  <h1>Amphib 🐸</h1>
+  <p class="sub">Amphib ingests a resume PDF, extracts structured data with an LLM, cross-references GitHub for ground truth, and produces an explainable score.</p>
+  <div class="hero-badges">
+    <img alt="Python" src="https://img.shields.io/badge/python-3.11%2B-blue.svg">
+    <img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-yellow.svg">
+  </div>
+</div>
+
+<div class="features">
+  <div class="feature-card">
+    <span class="emoji">📄</span>
+    <h3>PDF Parsing</h3>
+    <p>Converts resume PDFs to clean Markdown while preserving structure — headings, links, tables, all intact.</p>
+  </div>
+  <div class="feature-card">
+    <span class="emoji">🧠</span>
+    <h3>LLM Extraction</h3>
+    <p>Section-by-section extraction using Jinja-templated prompts. Works with Ollama (local) or Gemini.</p>
+  </div>
+  <div class="feature-card">
+    <span class="emoji">🐙</span>
+    <h3>GitHub Enrichment</h3>
+    <p>Fetches real profile and repo data, classifies projects, and picks the most meaningful contributions.</p>
+  </div>
+  <div class="feature-card">
+    <span class="emoji">📊</span>
+    <h3>Fair Scoring</h3>
+    <p>Objective evaluation across four axes with evidence, bonus points, and deductions — no black boxes.</p>
+  </div>
+  <div class="feature-card">
+    <span class="emoji">🔒</span>
+    <h3>Offline-First</h3>
+    <p>Run fully local with Ollama. Your data never leaves your machine unless you choose Gemini.</p>
+  </div>
+  <div class="feature-card">
+    <span class="emoji">📦</span>
+    <h3>CSV Export</h3>
+    <p>Development mode caches results and appends to a CSV for batch analysis and iteration.</p>
+  </div>
+</div>
+
+<h2>Quick start</h2>
+
+<pre><code>git clone &lt;your-repo-url&gt; && cd amphib
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+ollama pull gemma3:4b
+cp .env.example .env
+python score.py resume.pdf</code></pre>
+
+<p>See the <a href="setup.html">Setup guide</a> for detailed instructions.</p>
+
+<h2>Why Amphib?</h2>
+
+<p>Because it lives in two worlds — the structured world of resumes and the messy reality of GitHub — and it's comfortable in both.</p>
+
+
+    </main>
+  </div>
+</body>
+</html>

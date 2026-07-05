@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Amphib{% endblock %} — Amphib Docs</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐸</text></svg>">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="logo">Amphib 🐸</a>
+        <span class="tagline">a better breed of hiring agent</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="index.html" class="{% if page == 'index' %}active{% endif %}">Home</a>
+        <a href="setup.html" class="{% if page == 'setup' %}active{% endif %}">Setup</a>
+        <a href="architecture.html" class="{% if page == 'architecture' %}active{% endif %}">Architecture</a>
+        <a href="cli.html" class="{% if page == 'cli' %}active{% endif %}">CLI Usage</a>
+        <a href="configuration.html" class="{% if page == 'configuration' %}active{% endif %}">Configuration</a>
+        <a href="contributing.html" class="{% if page == 'contributing' %}active{% endif %}">Contributing</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="https://amphib.dev" target="_blank">amphib.dev</a>
+        <a href="LICENSE">MIT License</a>
+      </div>
+    </aside>
+    <main class="content">
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</body>
+</html>

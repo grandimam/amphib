@@ -1,0 +1,54 @@
+{% extends "base.jinja" %}
+{% block title %}Setup{% endblock %}
+{% block content %}
+
+# Setup
+
+## Prerequisites
+
+- **Python 3.11+** — the repo pins `.python-version` to 3.11.13.
+- **One LLM backend:**
+  - [Ollama](https://ollama.com/) for local models (recommended)
+  - A [Gemini API key](https://aistudio.google.com/api-keys) if using Google's models
+
+## Installation
+
+```bash
+git clone <your-repo-url> && cd amphib
+python -m venv .venv
+source .venv/bin/activate       # Linux / macOS
+pip install -r requirements.txt
+```
+
+## Pull a model (Ollama)
+
+```bash
+ollama pull gemma3:4b           # balanced — good starting point
+ollama pull gemma3:12b          # more capable, needs more RAM
+ollama pull gemma3:1b           # lightweight, fast
+```
+
+## Configure
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` to set your provider and credentials:
+
+| Variable | Values | Description |
+|---|---|---|
+| `LLM_PROVIDER` | `ollama` or `gemini` | Which backend to use |
+| `DEFAULT_MODEL` | e.g. `gemma3:4b` | Model name |
+| `GEMINI_API_KEY` | string | Required when using Gemini |
+| `GITHUB_TOKEN` | string | Optional — bumps API rate limits |
+
+## Run
+
+```bash
+python score.py /path/to/resume.pdf
+```
+
+That's it. Amphib will parse, enrich, and print a scored evaluation.
+
+{% endblock %}

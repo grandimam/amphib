@@ -1,0 +1,54 @@
+{% extends "base.jinja" %}
+{% block title %}Configuration{% endblock %}
+{% block content %}
+
+# Configuration
+
+## Environment variables
+
+Copy the example file and edit:
+
+```bash
+cp .env.example .env
+```
+
+| Variable | Required | Default | Description |
+|---|---|---|---|
+| `LLM_PROVIDER` | Yes | `ollama` | `ollama` or `gemini` |
+| `DEFAULT_MODEL` | Yes | `gemma3:4b` | Model name passed to the provider |
+| `GEMINI_API_KEY` | When using Gemini | — | Your Google Gemini API key |
+| `GITHUB_TOKEN` | No | — | GitHub personal access token for higher API rate limits |
+
+## Provider mapping
+
+Provider routing lives in `prompt.py` and `models.py`:
+
+- **Ollama** — `models.OllamaProvider` wraps `ollama.chat` directly
+- **Gemini** — `models.GeminiProvider` adapts Gemini responses to a unified format
+
+## Development mode
+
+`config.py` has a single toggle:
+
+```python
+DEVELOPMENT_MODE = True   # enables caching + CSV export
+```
+
+When on:
+
+- Intermediate results are cached to `cache/` (speeds up iteration)
+- Each run appends a row to `resume_evaluations.csv`
+- Useful for batch processing and debugging
+
+## File layout
+
+```
+amphib/
+├── config.py           # development mode flag
+├── .env                # your local environment variables
+├── .env.example        # template for .env
+├── cache/              # cached intermediate results (gitignored)
+└── resume_evaluations.csv  # scored results (gitignored)
+```
+
+{% endblock %}

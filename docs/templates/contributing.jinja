@@ -1,0 +1,78 @@
+{% extends "base.jinja" %}
+{% block title %}Contributing{% endblock %}
+{% block content %}
+
+# Contributing
+
+Thanks for your interest in improving Amphib. Contributions are welcome — docs, bug reports, features, and code.
+
+## Reporting bugs
+
+1. Check if the bug has already been reported.
+2. Open a new issue with:
+   - Clear description and expected behaviour
+   - Environment: OS, Python version, Amphib commit
+   - Steps to reproduce
+   - Relevant logs
+
+> If the bug involves PDF parsing or model output, attach a minimal PDF and the exact model used.
+
+## Feature requests
+
+1. Check for existing requests before opening a new one.
+2. Describe the problem, your proposed solution, and alternatives considered.
+
+## Contributing code
+
+1. Open an issue first to discuss the change.
+2. Create a feature branch for your work.
+
+### Development workflow
+
+1. Fork and clone your fork.
+2. Create a branch per change (avoid pushing to default branch).
+3. Set up the environment and run the pipeline to validate.
+4. Run the CLI on a small sample to verify behaviour.
+
+### Style guide
+
+- Format with [Black](https://black.readthedocs.io/en/stable/).
+- Keep functions short and focused.
+- Prefer pure helpers for prompt assembly and transformations.
+
+### Prompts and providers
+
+- Keep prompts declarative and provider-agnostic.
+- Avoid model-specific tokens or formatting.
+- Include before/after examples in your PR description when changing prompts.
+
+### Testing
+
+Validate changes with real resumes under different providers:
+
+- One run with Ollama using the default local model
+- One run with Gemini if you have an API key
+
+Add or update small tests for each stage:
+
+- PDF → Markdown
+- Section extraction → JSON Resume
+- GitHub enrichment on a known username
+- Evaluation → JSON with required fields
+
+### Commit messages
+
+Use clear, imperative subjects:
+
+```
+fix: handle en dash date ranges in work parser
+feat: add support for custom scoring weights
+```
+
+Reference the issue number when applicable.
+
+## Code of conduct
+
+Be respectful and collaborative. Report unacceptable behaviour through an issue or to the maintainers.
+
+{% endblock %}

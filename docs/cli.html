@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CLI Usage — Amphib Docs</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐸</text></svg>">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="logo">Amphib 🐸</a>
+        <span class="tagline">a better breed of hiring agent</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="index.html" class="">Home</a>
+        <a href="setup.html" class="">Setup</a>
+        <a href="architecture.html" class="">Architecture</a>
+        <a href="cli.html" class="active">CLI Usage</a>
+        <a href="configuration.html" class="">Configuration</a>
+        <a href="contributing.html" class="">Contributing</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="https://amphib.dev" target="_blank">amphib.dev</a>
+        <a href="LICENSE">MIT License</a>
+      </div>
+    </aside>
+    <main class="content">
+      
+
+# CLI Usage
+
+## End-to-end scoring
+
+The single entry point. Point it at a resume PDF.
+
+```bash
+python score.py /path/to/resume.pdf
+```
+
+### What happens
+
+1. **PDF extraction** — converted to Markdown, cached to `cache/resumecache_<basename>.json` (when development mode is on).
+2. **GitHub enrichment** — if a GitHub profile is found in the resume, repositories are fetched and cached to `cache/githubcache_<basename>.json`.
+3. **Evaluation** — the evaluator scores the candidate and prints a report. In development mode, a CSV row is appended to `resume_evaluations.csv`.
+
+### Example output
+
+```
+──  Evaluation Report ──────────────────────────────
+
+  open_source        ████████░░  8 / 10
+  self_projects      ██████░░░░  6 / 10
+  production         ██████████  10 / 10
+  technical_skills   ███████░░░  7 / 10
+
+  bonus              +2
+  deductions         -1
+  ─────────────────────────────
+  total              32 / 40
+```
+
+## Development mode
+
+Toggle caching and CSV export in `config.py`:
+
+```python
+DEVELOPMENT_MODE = True   # enables cache + CSV
+```
+
+Leave it on during iteration. Results accumulate in `resume_evaluations.csv` for batch analysis.
+
+## Caching
+
+Intermediate files are stored under `cache/`:
+
+- `cache/resumecache_<basename>.json` — parsed resume data
+- `cache/githubcache_<basename>.json` — fetched GitHub data
+
+Clear the cache directory to force re-extraction.
+
+
+    </main>
+  </div>
+</body>
+</html>

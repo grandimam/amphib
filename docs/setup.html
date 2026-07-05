@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Setup — Amphib Docs</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐸</text></svg>">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="index.html" class="logo">Amphib 🐸</a>
+        <span class="tagline">a better breed of hiring agent</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="index.html" class="">Home</a>
+        <a href="setup.html" class="active">Setup</a>
+        <a href="architecture.html" class="">Architecture</a>
+        <a href="cli.html" class="">CLI Usage</a>
+        <a href="configuration.html" class="">Configuration</a>
+        <a href="contributing.html" class="">Contributing</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="https://amphib.dev" target="_blank">amphib.dev</a>
+        <a href="LICENSE">MIT License</a>
+      </div>
+    </aside>
+    <main class="content">
+      
+
+# Setup
+
+## Prerequisites
+
+- **Python 3.11+** — the repo pins `.python-version` to 3.11.13.
+- **One LLM backend:**
+  - [Ollama](https://ollama.com/) for local models (recommended)
+  - A [Gemini API key](https://aistudio.google.com/api-keys) if using Google's models
+
+## Installation
+
+```bash
+git clone <your-repo-url> && cd amphib
+python -m venv .venv
+source .venv/bin/activate       # Linux / macOS
+pip install -r requirements.txt
+```
+
+## Pull a model (Ollama)
+
+```bash
+ollama pull gemma3:4b           # balanced — good starting point
+ollama pull gemma3:12b          # more capable, needs more RAM
+ollama pull gemma3:1b           # lightweight, fast
+```
+
+## Configure
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` to set your provider and credentials:
+
+| Variable | Values | Description |
+|---|---|---|
+| `LLM_PROVIDER` | `ollama` or `gemini` | Which backend to use |
+| `DEFAULT_MODEL` | e.g. `gemma3:4b` | Model name |
+| `GEMINI_API_KEY` | string | Required when using Gemini |
+| `GITHUB_TOKEN` | string | Optional — bumps API rate limits |
+
+## Run
+
+```bash
+python score.py /path/to/resume.pdf
+```
+
+That's it. Amphib will parse, enrich, and print a scored evaluation.
+
+
+    </main>
+  </div>
+</body>
+</html>

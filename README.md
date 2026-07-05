@@ -16,11 +16,7 @@
   </a>
 </p>
 
----
-
 Amphib ingests a resume PDF, extracts structured data with an LLM, cross-references GitHub for ground truth, and produces an explainable score. It runs locally with Ollama or uses Gemini — your data stays with you.
-
----
 
 ## How it works
 
@@ -43,8 +39,6 @@ Amphib ingests a resume PDF, extracts structured data with an LLM, cross-referen
 ### 5. Score → Output
 
 `score.py` prints a readable summary. With `DEVELOPMENT_MODE=True` it also writes to `resume_evaluations.csv` and caches intermediate results.
-
----
 
 ## Quick start
 
@@ -76,8 +70,6 @@ cp .env.example .env        # edit your provider and key
 python score.py resume.pdf
 ```
 
----
-
 ## Configuration
 
 | Variable | Values | What it does |
@@ -92,8 +84,6 @@ python score.py resume.pdf
 ```python
 DEVELOPMENT_MODE = True   # caches results, exports CSV
 ```
-
----
 
 ## Project layout
 
@@ -125,27 +115,19 @@ DEVELOPMENT_MODE = True   # caches results, exports CSV
 └── requirements.txt
 ```
 
----
-
 ## Provider details
 
 **Ollama** — set `LLM_PROVIDER=ollama`, pick any model. The wrapper calls `ollama.chat` directly.
 
 **Gemini** — set `LLM_PROVIDER=gemini`, provide your key, pick a model like `gemini-2.0-flash`. Responses are adapted to a unified format.
 
----
-
 ## Why "Amphib"?
 
 Because it lives in two worlds — the structured world of resumes and the messy reality of GitHub — and it's comfortable in both.
 
----
-
 ## License
 
 [MIT](LICENSE) © HackerRank
-
----
 
 ## Acknowledgments
 

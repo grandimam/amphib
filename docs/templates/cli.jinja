@@ -2,24 +2,23 @@
 {% block title %}CLI Usage{% endblock %}
 {% block content %}
 
-# CLI Usage
+<h1>CLI Usage</h1>
 
-## Score a resume
+<h2>Score a resume</h2>
 
-```bash
-python score.py /path/to/resume.pdf
-```
+<pre><code>python score.py /path/to/resume.pdf</code></pre>
 
-### What happens
+<h3>What happens</h3>
 
-1. PDF is extracted to Markdown (cached in `cache/` if dev mode is on).
-2. GitHub data is fetched and cached.
-3. An evaluation report is printed. Dev mode also appends to `resume_evaluations.csv`.
+<ol>
+  <li>PDF is extracted to Markdown (cached in <code>cache/</code> if dev mode is on).</li>
+  <li>GitHub data is fetched and cached.</li>
+  <li>An evaluation report is printed. Dev mode also appends to <code>resume_evaluations.csv</code>.</li>
+</ol>
 
-### Example output
+<h3>Example output</h3>
 
-```
-  open_source        ████████░░  8 / 10
+<pre><code>  open_source        ████████░░  8 / 10
   self_projects      ██████░░░░  6 / 10
   production         ██████████  10 / 10
   technical_skills   ███████░░░  7 / 10
@@ -27,24 +26,23 @@ python score.py /path/to/resume.pdf
   bonus              +2
   deductions         -1
   ─────────────────────────────
-  total              32 / 40
-```
+  total              32 / 40</code></pre>
 
-## Dev mode
+<h2>Dev mode</h2>
 
-In `config.py`:
+<p>In <code>config.py</code>:</p>
 
-```python
-DEVELOPMENT_MODE = True   # enables cache + CSV
-```
+<pre><code>DEVELOPMENT_MODE = True   # enables cache + CSV</code></pre>
 
-Leave it on during iteration. Results accumulate in `resume_evaluations.csv`.
+<p>Leave it on during iteration. Results accumulate in <code>resume_evaluations.csv</code>.</p>
 
-## Caching
+<h2>Caching</h2>
 
-- `cache/resumecache_<name>.json` — parsed resume
-- `cache/githubcache_<name>.json` — GitHub data
+<ul>
+  <li><code>cache/resumecache_&lt;name&gt;.json</code> — parsed resume</li>
+  <li><code>cache/githubcache_&lt;name&gt;.json</code> — GitHub data</li>
+</ul>
 
-Delete `cache/` to force a fresh run.
+<p>Delete <code>cache/</code> to force a fresh run.</p>
 
 {% endblock %}

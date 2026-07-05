@@ -31,40 +31,62 @@
       </div>
       
 
-# Architecture
+<h1>Architecture</h1>
 
-Five stages. Each is independent, testable, and replaceable.
+<p>Five stages. Each is independent, testable, and replaceable.</p>
 
-## 1. PDF → Markdown
+<h2>1. PDF → Markdown</h2>
 
-`pymupdf_rag.py` and `pdf.py` turn PDF pages into Markdown using PyMuPDF. Headings, links, tables — everything survives.
+<p><code>pymupdf_rag.py</code> and <code>pdf.py</code> turn PDF pages into Markdown using PyMuPDF. Headings, links, tables — everything survives.</p>
 
-## 2. Markdown → JSON
+<h2>2. Markdown → JSON</h2>
 
-`pdf.py` sends each section (work, education, skills, etc.) to the LLM via Jinja templates in `prompts/templates/`. Results assemble into a typed `JSONResume` object.
+<p><code>pdf.py</code> sends each section (work, education, skills, etc.) to the LLM via Jinja templates in <code>prompts/templates/</code>. Results assemble into a typed <code>JSONResume</code> object.</p>
 
-## 3. GitHub enrichment
+<h2>3. GitHub enrichment</h2>
 
-`github.py` finds the candidate's GitHub handle, fetches profile and repos, classifies projects, and asks the LLM to pick the 7 most meaningful ones.
+<p><code>github.py</code> finds the candidate's GitHub handle, fetches profile and repos, classifies projects, and asks the LLM to pick the 7 most meaningful ones.</p>
 
-## 4. Evaluation
+<h2>4. Evaluation</h2>
 
-`evaluator.py` scores across four axes — open source, personal projects, production experience, technical skills — with bonus marks, deductions, and cited evidence.
+<p><code>evaluator.py</code> scores across four axes — open source, personal projects, production experience, technical skills — with bonus marks, deductions, and cited evidence.</p>
 
-## 5. Output
+<h2>5. Output</h2>
 
-`score.py` prints a readable summary. With `DEVELOPMENT_MODE=True` it also caches results and appends to `resume_evaluations.csv`.
+<p><code>score.py</code> prints a readable summary. With <code>DEVELOPMENT_MODE=True</code> it also caches results and appends to <code>resume_evaluations.csv</code>.</p>
 
-## Key modules
+<h2>Key modules</h2>
 
-| Module | Role |
-|---|---|
-| `models.py` | Pydantic schemas + LLM provider interfaces |
-| `llm_utils.py` | Provider init + response cleanup |
-| `transform.py` | Normalises LLM JSON to JSON Resume format |
-| `prompt.py` | Routes to the right prompt templates |
-| `prompts/` | All Jinja templates for extraction + scoring |
-| `config.py` | Dev mode toggle (caching + CSV) |
+<table>
+  <tr>
+    <th>Module</th>
+    <th>Role</th>
+  </tr>
+  <tr>
+    <td><code>models.py</code></td>
+    <td>Pydantic schemas + LLM provider interfaces</td>
+  </tr>
+  <tr>
+    <td><code>llm_utils.py</code></td>
+    <td>Provider init + response cleanup</td>
+  </tr>
+  <tr>
+    <td><code>transform.py</code></td>
+    <td>Normalises LLM JSON to JSON Resume format</td>
+  </tr>
+  <tr>
+    <td><code>prompt.py</code></td>
+    <td>Routes to the right prompt templates</td>
+  </tr>
+  <tr>
+    <td><code>prompts/</code></td>
+    <td>All Jinja templates for extraction + scoring</td>
+  </tr>
+  <tr>
+    <td><code>config.py</code></td>
+    <td>Dev mode toggle (caching + CSV)</td>
+  </tr>
+</table>
 
 
     </main>

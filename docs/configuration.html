@@ -31,39 +31,59 @@
       </div>
       
 
-# Configuration
+<h1>Configuration</h1>
 
-## Environment
+<h2>Environment</h2>
 
-```bash
-cp .env.example .env
-```
+<pre><code>cp .env.example .env</code></pre>
 
-| Variable | Required | Default | Description |
-|---|---|---|---|
-| `LLM_PROVIDER` | Yes | `ollama` | `ollama` or `gemini` |
-| `DEFAULT_MODEL` | Yes | `gemma3:4b` | Model name |
-| `GEMINI_API_KEY` | With Gemini | — | Google Gemini API key |
-| `GITHUB_TOKEN` | No | — | Higher GitHub API rate limits |
+<table>
+  <tr>
+    <th>Variable</th>
+    <th>Required</th>
+    <th>Default</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><code>LLM_PROVIDER</code></td>
+    <td>Yes</td>
+    <td><code>ollama</code></td>
+    <td><code>ollama</code> or <code>gemini</code></td>
+  </tr>
+  <tr>
+    <td><code>DEFAULT_MODEL</code></td>
+    <td>Yes</td>
+    <td><code>gemma3:4b</code></td>
+    <td>Model name</td>
+  </tr>
+  <tr>
+    <td><code>GEMINI_API_KEY</code></td>
+    <td>With Gemini</td>
+    <td>—</td>
+    <td>Google Gemini API key</td>
+  </tr>
+  <tr>
+    <td><code>GITHUB_TOKEN</code></td>
+    <td>No</td>
+    <td>—</td>
+    <td>Higher GitHub API rate limits</td>
+  </tr>
+</table>
 
-## Dev mode
+<h2>Dev mode</h2>
 
-```python
-# config.py
-DEVELOPMENT_MODE = True   # caching + CSV export
-```
+<pre><code># config.py
+DEVELOPMENT_MODE = True   # caching + CSV export</code></pre>
 
-When on: caches results in `cache/`, appends to `resume_evaluations.csv`.
+<p>When on: caches results in <code>cache/</code>, appends to <code>resume_evaluations.csv</code>.</p>
 
-## Layout
+<h2>Layout</h2>
 
-```
-config.py           # dev mode flag
+<pre><code>config.py           # dev mode flag
 .env                # your local config
 .env.example        # template
 cache/              # cached results (gitignored)
-resume_evaluations.csv  # scored results (gitignored)
-```
+resume_evaluations.csv  # scored results (gitignored)</code></pre>
 
 
     </main>

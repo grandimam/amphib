@@ -31,51 +31,66 @@
       </div>
       
 
-# Setup
+<h1>Setup</h1>
 
-## Prerequisites
+<h2>Prerequisites</h2>
 
-- Python 3.11+
-- [Ollama](https://ollama.com/) (recommended) or a [Gemini API key](https://aistudio.google.com/api-keys)
+<ul>
+  <li>Python 3.11+</li>
+  <li><a href="https://ollama.com/">Ollama</a> (recommended) or a <a href="https://aistudio.google.com/api-keys">Gemini API key</a></li>
+</ul>
 
-## Install
+<h2>Install</h2>
 
-```bash
-git clone <your-repo-url> && cd amphib
+<pre><code>git clone &lt;your-repo-url&gt; && cd amphib
 python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-```
+pip install -r requirements.txt</code></pre>
 
-## Pull a model
+<h2>Pull a model</h2>
 
-```bash
-ollama pull gemma3:4b      # balanced
+<pre><code>ollama pull gemma3:4b      # balanced
 ollama pull gemma3:12b     # more capable
-ollama pull gemma3:1b      # lightweight
-```
+ollama pull gemma3:1b      # lightweight</code></pre>
 
-## Configure
+<h2>Configure</h2>
 
-```bash
-cp .env.example .env
-```
+<pre><code>cp .env.example .env</code></pre>
 
-Edit `.env`:
+<p>Edit <code>.env</code>:</p>
 
-| Variable | Values | Description |
-|---|---|---|
-| `LLM_PROVIDER` | `ollama` or `gemini` | Backend choice |
-| `DEFAULT_MODEL` | e.g. `gemma3:4b` | Model name |
-| `GEMINI_API_KEY` | string | Required for Gemini |
-| `GITHUB_TOKEN` | string | Optional — higher API rate limits |
+<table>
+  <tr>
+    <th>Variable</th>
+    <th>Values</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><code>LLM_PROVIDER</code></td>
+    <td><code>ollama</code> or <code>gemini</code></td>
+    <td>Backend choice</td>
+  </tr>
+  <tr>
+    <td><code>DEFAULT_MODEL</code></td>
+    <td>e.g. <code>gemma3:4b</code></td>
+    <td>Model name</td>
+  </tr>
+  <tr>
+    <td><code>GEMINI_API_KEY</code></td>
+    <td>string</td>
+    <td>Required for Gemini</td>
+  </tr>
+  <tr>
+    <td><code>GITHUB_TOKEN</code></td>
+    <td>string</td>
+    <td>Optional — higher API rate limits</td>
+  </tr>
+</table>
 
-## Run
+<h2>Run</h2>
 
-```bash
-python score.py /path/to/resume.pdf
-```
+<pre><code>python score.py /path/to/resume.pdf</code></pre>
 
-That's it. Amphib will parse, enrich, and print a scored evaluation.
+<p>That's it. Amphib will parse, enrich, and print a scored evaluation.</p>
 
 
     </main>

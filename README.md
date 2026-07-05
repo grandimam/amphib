@@ -1,238 +1,114 @@
-# Hiring Agent
-
-<p align="center"><strong>Resume-to-Score pipeline</strong> that extracts structured data from PDFs, enriches with GitHub signals, and outputs a fair, explainable evaluation.</p>
+<p align="center">
+  <strong>Amphib 🐸</strong><br>
+  <em>Amphib — a better breed of hiring agent.</em><br>
+  Amphib reads a resume, checks what's real on GitHub, and gives you a verdict — fully offline if you want.
+</p>
 
 <p align="center">
+  <a href="https://amphib.dev">
+    <img alt="Website" src="https://img.shields.io/badge/web-amphib.dev-8B5CF6.svg">
+  </a>
   <a href="https://www.python.org/downloads/release/python-3110/">
     <img alt="Python" src="https://img.shields.io/badge/python-3.11%2B-blue.svg">
   </a>
-  <a href="https://github.com/interviewstreet/hiring-agent/blob/master/LICENSE">
+  <a href="LICENSE">
     <img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-yellow.svg">
-  </a>
-  <a href="https://github.com/psf/black">
-    <img alt="Code style: Black" src="https://img.shields.io/badge/code%20style-Black-000000.svg">
   </a>
 </p>
 
 ---
 
-## Contents
-
-- [Overview](#overview)
-- [Architecture](#architecture)
-- [Installation and Setup](#installation-and-setup)
-  - [Prerequisites](#prerequisites)
-  - [Quick setup with pip](#quick-setup-with-pip)
-  - [Ollama models](#ollama-models)
-- [Configuration](#configuration)
-- [How it works](#how-it-works)
-- [CLI usage](#cli-usage)
-- [Directory layout](#directory-layout)
-- [Provider details](#provider-details)
-- [Contributing](#contributing)
-- [License](#license)
+Amphib ingests a resume PDF, extracts structured data with an LLM, cross-references GitHub for ground truth, and produces an explainable score. It runs locally with Ollama or uses Gemini — your data stays with you.
 
 ---
 
-## Overview
+## How it works
 
-Hiring Agent parses a resume PDF to Markdown, extracts sectioned JSON using a local or hosted LLM, augments the data with GitHub profile and repository signals, then produces an objective evaluation with category scores, evidence, bonus points, and deductions. You can run fully local with Ollama or use Google Gemini.
+### 1. PDF → Text
 
----
+`pymupdf_rag.py` and `pdf.py` turn PDF pages into Markdown. Headings, links, tables — everything survives.
 
-## Architecture
+### 2. Text → Structure
 
-<table>
-<tr>
-<td>
+`pdf.py` feeds each section (work, education, skills, projects, awards) to an LLM using Jinja templates from `prompts/templates/`. The result is a typed `JSONResume` object.
 
-**Flow**
+### 3. GitHub → Proof
 
-1. `pymupdf_rag.py` converts PDF pages to Markdown-like text.
-2. `pdf.py` calls the LLM per section using Jinja templates under `prompts/templates`.
-3. `github.py` fetches profile and repos, classifies projects, and asks the LLM to select the top 7.
-4. `evaluator.py` runs a strict-scored evaluation with fairness constraints.
-5. `score.py` orchestrates everything end to end and writes CSV when development mode is on.
+`github.py` finds the candidate's GitHub handle, fetches their profile and repos, classifies projects, and asks the LLM to pick the 7 most meaningful ones. No self-promotion without substance.
 
-</td>
-<td>
+### 4. Structure → Score
 
-**Key modules**
+`evaluator.py` scores across four axes — open source, personal projects, production experience, technical skills — plus bonus marks and deductions, all with cited evidence.
 
-- `models.py`
-  Pydantic schemas and LLM provider interfaces.
+### 5. Score → Output
 
-- `llm_utils.py`
-  Provider initialization and response cleanup.
-
-- `transform.py`
-  Normalization from loose LLM JSON to JSON Resume style.
-
-- `prompts/`
-  All Jinja templates for extraction and scoring.
-
-</td>
-</tr>
-</table>
+`score.py` prints a readable summary. With `DEVELOPMENT_MODE=True` it also writes to `resume_evaluations.csv` and caches intermediate results.
 
 ---
 
-## Installation and Setup
+## Quick start
 
 ### Prerequisites
 
-- **Python 3.11+**
+- Python 3.11+
+- An LLM backend: [Ollama](https://ollama.com/) (local) or a [Gemini API key](https://aistudio.google.com/api-keys)
 
-  The repository pins `.python-version` to 3.11.13.
-
-- **One LLM backend** (either of them)
-
-  - **Ollama** for local models
-    Install from the [official site](https://ollama.com/), then run `ollama serve`.
-  - **Google Gemini** if you have an API key, get it from [here](https://aistudio.google.com/api-keys).
-
-### Quick setup with pip
+### Setup
 
 ```bash
-$ git clone https://github.com/interviewstreet/hiring-agent
-$ cd hiring-agent
-
-$ python -m venv .venv
-# Linux or macOS
-$ source .venv/bin/activate
-# Windows
-# .venv\Scripts\activate
-
-$ pip install -r requirements.txt
+git clone <your-repo-url> && cd amphib
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
-### Ollama Models
-
-Pull the model you want to use. For example:
+### Pull a model (Ollama)
 
 ```bash
-$ ollama pull gemma3:4b
+ollama pull gemma3:4b       # balanced
+ollama pull gemma3:12b      # beefier
+ollama pull gemma3:1b       # lightweight
 ```
 
-If you want different results, you can pull other models such as:
+### Run
 
 ```bash
-# For higher system configuration
-$ ollama pull gemma3:12b
-
-# For lower system configuration
-$ ollama pull gemma3:1b
+cp .env.example .env        # edit your provider and key
+python score.py resume.pdf
 ```
 
 ---
 
 ## Configuration
 
-Copy the template and set your environment variables.
+| Variable | Values | What it does |
+|---|---|---|
+| `LLM_PROVIDER` | `ollama` / `gemini` | Pick your backend |
+| `DEFAULT_MODEL` | `gemma3:4b`, `gemini-2.5-pro`, ... | Model name |
+| `GEMINI_API_KEY` | string | Required for Gemini |
+| `GITHUB_TOKEN` | string | Optional — higher API rate limits |
 
-```bash
-$ cp .env.example .env
-```
-
-**Environment variables**
-
-| Variable         | Values                                      | Description                                                            |
-| ---------------- | ------------------------------------------- | ---------------------------------------------------------------------- |
-| `LLM_PROVIDER`   | `ollama` or `gemini`                        | Chooses provider. Defaults to Ollama.                                  |
-| `DEFAULT_MODEL`  | for example `gemma3:4b` or `gemini-2.5-pro` | Model name passed to the provider.                                     |
-| `GEMINI_API_KEY` | string                                      | Required when `LLM_PROVIDER=gemini`.                                   |
-| `GITHUB_TOKEN`   | optional                                    | Inherits from your shell environment, improves GitHub API rate limits. |
-
-Provider mapping lives in `prompt.py` and `models.py`. The `config.py` file has a single flag:
+`config.py` has one flag:
 
 ```python
-# config.py
-DEVELOPMENT_MODE = True  # enables caching and CSV export
+DEVELOPMENT_MODE = True   # caches results, exports CSV
 ```
 
-You can leave it on during iteration. See the next section for details.
-
 ---
 
-## How it works
+## Project layout
 
-<details>
-<summary><b>1) PDF extraction</b></summary>
-
-- `pymupdf_rag.py` and `pdf.py` read the PDF using PyMuPDF and convert pages to Markdown-like text.
-- The `to_markdown` routine handles headings, links, tables, and basic formatting.
-
-</details>
-
-<details>
-<summary><b>2) Section parsing with templates</b></summary>
-
-- `prompts/templates/*.jinja` define strict instructions for each section
-  Basics, Work, Education, Skills, Projects, Awards.
-- `pdf.PDFHandler` calls the LLM per section and assembles a `JSONResume` object (see `models.py`).
-
-</details>
-
-<details>
-<summary><b>3) GitHub enrichment</b></summary>
-
-- `github.py` extracts a username from the resume profiles, fetches profile and repos, and classifies each project.
-- It asks the LLM to select exactly 7 unique projects with a minimum author commit threshold, favoring meaningful contributions.
-
-</details>
-
-<details>
-<summary><b>4) Evaluation</b></summary>
-
-- `evaluator.py` uses templates that encode fairness and scoring rules.
-- Scores include `open_source`, `self_projects`, `production`, and `technical_skills`, plus bonus and deductions, then an explanation for evidence.
-
-</details>
-
-<details>
-<summary><b>5) Output and CSV export</b></summary>
-
-- `score.py` prints a readable summary to stdout.
-- When `DEVELOPMENT_MODE=True` it creates or appends a `resume_evaluations.csv` with key fields, and caches intermediate JSON under `cache/`.
-
-</details>
-
----
-
-## CLI usage
-
-### End to end scoring
-
-Provide a path to a resume PDF.
-
-```bash
-$ python score.py /path/to/resume.pdf
 ```
-
-What happens:
-
-1. If development mode is on, the PDF extraction result is cached to `cache/resumecache_<basename>.json`.
-2. If a GitHub profile is found in the resume, repositories are fetched and cached to `cache/githubcache_<basename>.json`.
-3. The evaluator prints a report and, in development mode, appends a CSV row to `resume_evaluations.csv`.
-
----
-
-## Directory layout
-
-```text
 .
-├── .env.example
-├── .python-version
-├── config.py
-├── evaluator.py
-├── github.py
-├── llm_utils.py
-├── models.py
-├── pdf.py
-├── prompt.py
+├── config.py                  # dev mode toggle
+├── evaluator.py               # scoring engine
+├── github.py                  # GitHub fetch + classification
+├── llm_utils.py               # provider init + cleanup
+├── models.py                  # pydantic schemas + provider wrappers
+├── pdf.py                     # LLM-based section parser
+├── prompt.py                  # provider → template routing
 ├── prompts/
 │   ├── template_manager.py
-│   └── templates/
+│   └── templates/             # Jinja prompts
 │       ├── awards.jinja
 │       ├── basics.jinja
 │       ├── education.jinja
@@ -243,42 +119,34 @@ What happens:
 │       ├── skills.jinja
 │       ├── system_message.jinja
 │       └── work.jinja
-├── pymupdf_rag.py
-├── requirements.txt
-├── score.py
-└── transform.py
+├── pymupdf_rag.py             # PDF → Markdown
+├── score.py                   # CLI entry point
+├── transform.py               # JSON normalisation
+└── requirements.txt
 ```
 
 ---
 
 ## Provider details
 
-### Ollama
+**Ollama** — set `LLM_PROVIDER=ollama`, pick any model. The wrapper calls `ollama.chat` directly.
 
-- Set `LLM_PROVIDER=ollama`
-- Set `DEFAULT_MODEL` to any pulled model, for example `gemma3:4b`
-- The provider wrapper in `models.OllamaProvider` calls `ollama.chat`
-
-### Gemini
-
-- Set `LLM_PROVIDER=gemini`
-- Set `DEFAULT_MODEL` to a supported Gemini model, for example `gemini-2.0-flash`
-- Provide `GEMINI_API_KEY`
-- The wrapper in `models.GeminiProvider` adapts responses to a unified format
+**Gemini** — set `LLM_PROVIDER=gemini`, provide your key, pick a model like `gemini-2.0-flash`. Responses are adapted to a unified format.
 
 ---
 
-## Contributing
+## Why "Amphib"?
 
-Please read the [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed guidelines on filing issues, proposing changes, and submitting pull requests. Key principles include:
-
-- Keep prompts declarative and provider-agnostic.
-- Validate changes with a couple of real resumes under different providers.
-- Add or adjust unit-free smoke tests that call each stage with minimal inputs.
+Because it lives in two worlds — the structured world of resumes and the messy reality of GitHub — and it's comfortable in both.
 
 ---
-
 
 ## License
 
-[MIT](https://github.com/interviewstreet/hiring-agent/blob/master/LICENSE) © HackerRank
+[MIT](LICENSE) © HackerRank
+
+---
+
+## Acknowledgments
+
+Amphib is built on [Hiring Agent](https://github.com/interviewstreet/hiring-agent) by HackerRank. Their open-source work made this possible.

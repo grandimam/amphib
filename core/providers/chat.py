@@ -5,7 +5,7 @@ from typing import runtime_checkable
 
 
 @runtime_checkable
-class ChatProvider:
+class LLMProvider:
 
 	def __init__(self, api_key: str):
 		self._api_key = api_key

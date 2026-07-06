@@ -1,0 +1,50 @@
+Analyze the layout structure of this resume markdown. Identify multi-column layouts at both the top level and within individual subsections.
+
+A multi-column layout means content is arranged side-by-side rather than in a single vertical flow. Key indicators:
+- Sections or items placed on the same horizontal line
+- Tabular arrangements of skills, languages, or other items
+- Sidebars divided by horizontal rules (---) or other visual separators
+- Two or more distinct columns of text running in parallel
+
+--- The input markdown starts here ---
+
+{{ text_content }}
+
+--- The input markdown ends here ---
+
+Return ONLY a JSON object with this structure:
+
+{
+  "overall_layout": "single_column" | "two_column" | "multi_column",
+  "detection_method": "A brief description of how the layout was identified",
+  "confidence": "high" | "medium" | "low",
+  "subsections_with_columns": [
+    {
+      "subsection_name": "Name of the subsection (e.g., Skills, Languages, Contact)",
+      "column_count": 2,
+      "items": ["Item 1", "Item 2", "Item 3"],
+      "evidence": "What specific formatting indicates columns here"
+    }
+  ],
+  "column_boundaries": [
+    {
+      "column_index": 0,
+      "start_position": "Approximate start of this column",
+      "content_summary": "What this column contains"
+    }
+  ],
+  "section_order": [
+    "The detected reading order of all sections: left-to-right, top-to-bottom, or other"
+  ]
+}
+
+**IMPORTANT RULES:**
+- Set `overall_layout` to `"single_column"` if content flows in one vertical stream
+- Set `overall_layout` to `"two_column"` if there are exactly two distinct columns
+- Set `overall_layout` to `"multi_column"` if there are three or more columns
+- List each subsection that uses multiple columns in `subsections_with_columns`
+- If no subsection has columns, return an empty array for `subsections_with_columns`
+- The `confidence` field reflects how certain you are about the layout detection
+- For `section_order`, describe whether sections should be read left-to-right column by column, top-to-bottom row by row, or in some other order
+
+**IMPORTANT**: Return ONLY valid JSON. Do not include any explanatory text.

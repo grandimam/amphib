@@ -19,4 +19,6 @@ dependencies = [
 [dependency-groups]
 dev = [
     "litellm>=1.91.0",
+    "pydantic-settings>=2.14.2",
+    "typer>=0.26.8",
 ]

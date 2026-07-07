@@ -6,30 +6,28 @@ from jinja2 import Template
 
 from typing import Dict
 
-from core.providers.base import BaseLLMProvider
 
+class PromptHandler:
 
-class PromptManager:
-
-	def __init__(
-			self,
-			provider: BaseLLMProvider,
-			*,
-			template_dir: str
-	):
-		self._provider = provider
-		self._template_dir = template_dir
+	def __init__(self, prompt_dir: str):
+		self._prompt_dir = prompt_dir
 		self.env = Environment(
-			loader=FileSystemLoader(template_dir),
+			loader=FileSystemLoader(self._prompt_dir),
 			trim_blocks=True,
 			lstrip_blocks=True,
 		)
 		self._templates: Dict[str, Template] = {}
-		self._load_templates()
+		self._load()
 
-	def _load_templates(self):
-		for filename in os.listdir(self._template_dir):
+	def _load(self):
+		for filename in os.listdir(self._prompt_dir):
 			if not filename.endswith(".jinja"):
 				continue
 			name = filename.removesuffix(".jinja")
 			self._templates[name] = self.env.get_template(filename)
+
+	def get(self, prompt_name):
+		if prompt_name not in self._templates:
+			raise ValueError(f'{prompt_name} not found')
+		template: Template = self._templates.get(prompt_name)
+		return template.render()

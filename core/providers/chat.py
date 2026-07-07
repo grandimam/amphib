@@ -1,10 +1,8 @@
 import litellm
 
 from typing import Union
-from typing import runtime_checkable
 
 
-@runtime_checkable
 class LLMProvider:
 
 	def __init__(self, api_key: str):
@@ -19,7 +17,7 @@ class LLMProvider:
 			top_p: Union[float | None] = None,
 	) -> str:
 		response = litellm.completion(
-			model_name=model_name,
+			model=model_name,
 			messages=messages,
 			temperature=temperature,
 			top_p=top_p,

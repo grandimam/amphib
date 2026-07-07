@@ -5,9 +5,11 @@ from pydantic_settings import SettingsConfigDict
 
 
 class Settings(BaseSettings):
-	app_name: str
-	openrouter_key: str
-	template_dir: str = "amphib/templates"
+	app_name: str = 'Amphib'
+	openrouter_api_key: str
+
+	prompt_dir: str = "templates"
+	model_name: str = 'openrouter/openai/gpt-3.5-turbo'
 
 	model_config = SettingsConfigDict(
 		env_file=".env",

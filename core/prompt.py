@@ -1,5 +1,7 @@
 import os
 
+from enum import Enum
+
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
 from jinja2 import Template
@@ -7,7 +9,11 @@ from jinja2 import Template
 from typing import Dict
 
 
-class PromptHandler:
+class PromptTemplate(Enum):
+	LAYOUT = 'layout'
+
+
+class PromptProvider:
 
 	def __init__(self, prompt_dir: str):
 		self._prompt_dir = prompt_dir

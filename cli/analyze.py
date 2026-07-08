@@ -2,10 +2,14 @@ import os
 import typer
 
 from core.parsers import PDFParser
-from core.prompt import PromptHandler
-from core.providers.chat import LLMProvider
+from core.providers.chat import ModelProvider
+from core.prompt import PromptProvider
+from core.prompt import PromptTemplate
 
 from core.config import settings
+
+from core import Amphib
+
 from rich import print
 
 app = typer.Typer()
@@ -13,18 +17,11 @@ app = typer.Typer()
 
 @app.command()
 def run(file_path: str):
-	resume_text: str = PDFParser().parse(file_path)
-	prompt_handler = PromptHandler(settings.prompt_dir)
-	sys_msg = prompt_handler.get('layout')
-
-	provider = LLMProvider(os.environ.get(settings.openrouter_api_key))
-	response = provider.chat(
-		model_name=settings.model_name,
-		messages=[
-			{"role": "system", "content": sys_msg},
-			{"role": "user", "content": resume_text},
-		],
-		temperature=0.0,
-		top_p=0.9
+	runner = Amphib(
+		parser=PDFParser(),
+		model_provider=ModelProvider(os.environ.get(settings.openrouter_api_key)),
+		prompt_provider=PromptProvider(settings.prompt_dir),
 	)
+	response = runner.run(file_path=file_path,  prompt_name=PromptTemplate.LAYOUT.value)
 	print(response)
+

@@ -13,6 +13,16 @@ from core.config import settings
 T = TypeVar("T")
 
 
+def _resolve_prompt_dir(dirname: str) -> str:
+	if os.path.isdir(dirname):
+		return dirname
+	core_dir = os.path.dirname(os.path.abspath(__file__))
+	candidate = os.path.join(core_dir, dirname)
+	if os.path.isdir(candidate):
+		return candidate
+	return dirname
+
+
 class PromptTemplate(Enum):
 	LAYOUT = 'layout'
 	EVALUATE = 'evaluate'
@@ -31,7 +41,7 @@ class JinjaPromptProvider(PromptProvider[str]):
 	name: str = 'jinja'
 
 	def __init__(self):
-		self._prompt_dir = settings.prompt_dir
+		self._prompt_dir = _resolve_prompt_dir(settings.prompt_dir)
 		self.env = Environment(
 			loader=FileSystemLoader(self._prompt_dir),
 			trim_blocks=True,

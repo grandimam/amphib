@@ -1,25 +1,60 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "amphib"
 version = "0.1.0"
-description = "Add your description here"
+description = "LLM-powered resume analysis, extraction, and scoring"
 readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.12"
+authors = [
+    { name = "Amphib Contributors" },
+]
+keywords = ["resume", "parsing", "llm", "hiring", "recruitment"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
 dependencies = [
-    "black==25.9.0",
     "google-generativeai==0.4.0",
     "jinja2==3.1.6",
+    "litellm>=1.91.0",
     "ollama==0.5.1",
-    "pydantic==2.11.7",
+    "pydantic>=2.12.3",
+    "pydantic-settings>=2.14.2",
     "pymupdf==1.26.3",
     "pymupdf4llm==0.0.27",
     "python-dotenv==1.0.1",
     "requests==2.32.4",
+    "rich>=13.0.0",
+    "typer>=0.26.8",
 ]
+
+[project.urls]
+Homepage = "https://github.com/grandimam/amphib"
+Repository = "https://github.com/grandimam/amphib"
+
+[project.scripts]
+amphib = "cli:main"
+
+[tool.setuptools.packages.find]
+include = ["cli*", "core*"]
+namespaces = false
+
+[tool.setuptools]
+py-modules = ["main"]
+include-package-data = true
 
 [dependency-groups]
 dev = [
-    "litellm>=1.91.0",
-    "pydantic-settings>=2.14.2",
     "ruff>=0.15.20",
-    "typer>=0.26.8",
 ]

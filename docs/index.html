@@ -1,69 +1,395 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home — Amphib Docs</title>
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐸</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amphib - resume parsing, extraction, and scoring</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#09090b;
+  --surface:rgba(24,24,27,.6);
+  --surface-solid:#18181b;
+  --text:#fafafa;
+  --text-2:#a1a1aa;
+  --text-3:#71717a;
+  --border:rgba(63,63,70,.5);
+  --border-hover:rgba(139,92,246,.4);
+  --accent:#8b5cf6;
+  --accent-2:#6366f1;
+  --accent-glow:rgba(139,92,246,.15);
+  --radius:16px;
+  --font:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --mono:'JetBrains Mono',"SF Mono","Fira Code",Menlo,monospace;
+}
+
+html{font-size:16px;scroll-behavior:smooth}
+body{
+  font-family:var(--font);
+  color:var(--text);
+  background:var(--bg);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* animated gradient mesh */
+body::before{
+  content:'';
+  position:fixed;
+  top:-50%;left:-50%;
+  width:200%;height:200%;
+  background:radial-gradient(circle at 20% 30%,rgba(139,92,246,.08) 0%,transparent 50%),
+             radial-gradient(circle at 80% 70%,rgba(99,102,241,.06) 0%,transparent 50%),
+             radial-gradient(circle at 50% 50%,rgba(168,85,247,.04) 0%,transparent 50%);
+  animation:drift 20s ease-in-out infinite alternate;
+  pointer-events:none;
+  z-index:0;
+}
+@keyframes drift{
+  0%{transform:translate(0,0)}
+  100%{transform:translate(-5%,-3%)}
+}
+
+.wrap{
+  position:relative;
+  z-index:1;
+  max-width:720px;
+  margin:0 auto;
+  padding:5rem 1.5rem 4rem;
+}
+
+/* ── hero ── */
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:.4rem;
+  padding:.35rem .75rem;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:100px;
+  font-size:.75rem;
+  font-weight:500;
+  color:var(--text-2);
+  margin-bottom:2rem;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+.badge::before{
+  content:'';
+  width:6px;height:6px;
+  border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 8px var(--accent);
+}
+
+h1{
+  font-size:3rem;
+  font-weight:800;
+  letter-spacing:-.04em;
+  line-height:1.1;
+  margin-bottom:1rem;
+  background:linear-gradient(135deg,#fafafa 0%,#a1a1aa 60%,#8b5cf6 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.hero-desc{
+  font-size:1.125rem;
+  color:var(--text-2);
+  margin-bottom:2.5rem;
+  max-width:520px;
+  line-height:1.6;
+}
+
+/* ── install ── */
+.install{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:1.25rem;
+  margin-bottom:2.5rem;
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  transition:border-color .2s;
+}
+.install:hover{border-color:var(--border-hover)}
+
+.install-label{
+  font-size:.7rem;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:var(--text-3);
+  margin-bottom:.6rem;
+}
+.install-bar{
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+  background:rgba(9,9,11,.6);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:.7rem 1rem;
+}
+.install-bar code{
+  font-family:var(--mono);
+  color:var(--text-2);
+  font-size:.8rem;
+  flex:1;
+  overflow-x:auto;
+  white-space:nowrap;
+}
+.install-bar code .pip{color:var(--accent)}
+
+/* ── command grid ── */
+.cmds{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:.75rem;
+  margin-bottom:3.5rem;
+}
+.cmd-card{
+  display:flex;
+  flex-direction:column;
+  gap:.5rem;
+  padding:1.1rem;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  text-decoration:none;
+  color:inherit;
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  transition:all .2s;
+}
+.cmd-card:hover{
+  border-color:var(--border-hover);
+  transform:translateY(-2px);
+  box-shadow:0 8px 30px var(--accent-glow);
+}
+.cmd-card code{
+  font-family:var(--mono);
+  color:var(--text);
+  font-size:.78rem;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.cmd-card span{
+  font-size:.8rem;
+  color:var(--text-3);
+  line-height:1.4;
+}
+
+/* ── section labels ── */
+.label{
+  font-size:.7rem;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:var(--text-3);
+  margin-bottom:1rem;
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+}
+.label::after{
+  content:'';
+  flex:1;
+  height:1px;
+  background:var(--border);
+}
+
+/* ── TUI blocks ── */
+.tui{
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  overflow:hidden;
+  margin-bottom:1rem;
+  background:rgba(9,9,11,.4);
+}
+.tui-head{
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+  padding:.6rem 1rem;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  font-size:.75rem;
+  font-weight:500;
+  color:var(--text-3);
+}
+.tui-head .dot{
+  width:10px;height:10px;border-radius:50%;
+  background:var(--accent);
+  opacity:.6;
+}
+.tui pre{
+  margin:0;
+  padding:1.25rem;
+  font-family:var(--mono);
+  font-size:.76rem;
+  line-height:1.55;
+  overflow-x:auto;
+  color:#c4c4cc;
+}
+.tui pre .dim{color:var(--text-3)}
+
+/* ── pipeline ── */
+.pipeline{
+  margin:3.5rem 0;
+  padding:1.5rem;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+.pipeline-flow{
+  font-family:var(--mono);
+  font-size:.85rem;
+  color:var(--accent);
+  margin-bottom:.75rem;
+}
+.pipeline p{
+  font-size:.875rem;
+  color:var(--text-2);
+  line-height:1.6;
+}
+
+/* ── footer ── */
+.footer{
+  text-align:center;
+  margin-top:4rem;
+  padding-top:2rem;
+  border-top:1px solid var(--border);
+}
+.footer a{
+  color:var(--text-3);
+  text-decoration:none;
+  font-size:.85rem;
+  margin:0 .5rem;
+  padding:.4rem .8rem;
+  border-radius:8px;
+  transition:all .15s;
+}
+.footer a:hover{
+  color:var(--text);
+  background:var(--surface);
+}
+
+/* ── responsive ── */
+@media(max-width:640px){
+  .wrap{padding:3rem 1rem 3rem}
+  h1{font-size:2.2rem}
+  .cmds{grid-template-columns:1fr}
+  .hero-desc{font-size:1rem}
+}
+</style>
 </head>
 <body>
-  <div class="layout">
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <a href="index.html" class="logo">Amphib 🐸</a>
-      </div>
-      <nav class="sidebar-nav">
-        <a href="index.html" class="active">Home</a>
-        <a href="setup.html" class="">Setup</a>
-        <a href="architecture.html" class="">Architecture</a>
-        <a href="cli.html" class="">CLI Usage</a>
-        <a href="configuration.html" class="">Configuration</a>
-        <a href="contributing.html" class="">Contributing</a>
-      </nav>
-      <div class="sidebar-footer">
-        <a href="https://github.com/interviewstreet/hiring-agent" target="_blank">Built on Hiring Agent</a>
-      </div>
-    </aside>
-    <main class="content">
-      <div class="origin-notice">
-        🐸 <strong>Amphib</strong> is built on <a href="https://github.com/interviewstreet/hiring-agent" target="_blank">Hiring Agent</a> by HackerRank — and we're making it better.
-      </div>
-      
+<div class="wrap">
 
-<h1>Amphib 🐸</h1>
+<div class="badge">Open source &middot; Built on Hiring Agent</div>
 
-<p class="sub">A better breed of hiring agent — <strong>open source, actively maintained, and improving every day.</strong></p>
+<h1>Parse resumes.<br>Extract data. Score candidates.</h1>
+<p class="hero-desc">Three commands turn a PDF resume into structured data and evaluation reports. All from your terminal.</p>
 
-<p>Amphib ingests a resume PDF, extracts structured data with an LLM, cross-references GitHub for ground truth, and produces an explainable score. It runs locally with Ollama or uses Gemini.</p>
-
-<p>This project started as a fork of <a href="https://github.com/interviewstreet/hiring-agent">Hiring Agent</a> by HackerRank. We use it, we improve it, and we give those improvements back. That's the point.</p>
-
-<h2>Quick start</h2>
-
-<pre><code>git clone &lt;your-repo-url&gt; && cd amphib
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-ollama pull gemma3:4b
-cp .env.example .env
-python score.py resume.pdf</code></pre>
-
-<p><a href="setup.html">Full setup guide →</a></p>
-
-<h2>What makes Amphib different</h2>
-
-<p>We didn't just rebrand it. We're actively building on top of Hiring Agent:</p>
-
-<ul>
-  <li><strong>Active development.</strong> Issues get fixed, features get added, the project moves forward.</li>
-  <li><strong>Open improvements.</strong> Every change we make is public — no closed-source magic.</li>
-  <li><strong>Community-driven.</strong> We welcome contributions, feedback, and real-world use cases.</li>
-</ul>
-
-<p>Hiring Agent was a great foundation. Amphib is what happens when you keep building.</p>
-
-
-    </main>
+<div class="install">
+  <div class="install-label">Install</div>
+  <div class="install-bar">
+    <code><span class="pip">$</span> curl -sSL https://raw.githubusercontent.com/grandimam/amphib/main/install.sh | bash</code>
   </div>
+</div>
+
+<div class="cmds">
+  <a class="cmd-card" href="#analyze">
+    <code>amphib analyze</code>
+    <span>Detect layout, columns, section order</span>
+  </a>
+  <a class="cmd-card" href="#extract">
+    <code>amphib extract</code>
+    <span>Extract structured data in JSON Resume format</span>
+  </a>
+  <a class="cmd-card" href="#evaluate">
+    <code>amphib evaluate</code>
+    <span>Score across 4 categories with evidence</span>
+  </a>
+</div>
+
+<div class="label">Preview</div>
+
+<div class="tui" id="analyze">
+  <div class="tui-head"><span class="dot"></span> analyze &mdash; layout</div>
+  <pre>
+┌────────────────────────────────────────────┐
+│           Layout Analysis                  │
+│  Layout:    Two Column                     │
+│  Method:    Column boundary detection      │
+│  Confidence: high                          │
+└────────────────────────────────────────────┘
+
+<span class="dim">Section Order</span>
+├─ Header
+├─ Summary
+├─ Experience
+├─ Education
+├─ Skills
+└─ Projects</pre>
+</div>
+
+<div class="tui" id="extract">
+  <div class="tui-head"><span class="dot"></span> extract &mdash; data</div>
+  <pre>
+╭───────────────────────────────────╮
+│  Jane Doe                         │
+│  jane@example.com                 │
+│  github.com/janedoe               │
+╰───────────────────────────────────╯
+
+<span class="dim">Work Experience (3)</span>
+├─ Sr Engineer @ Acme    2021-03 – present
+│  └─ Led team, built microservices
+├─ Software Eng @ Beta   2018-06 – 2021-02
+│  └─ Built REST APIs, cut latency 40%
+└─ Junior Dev @ Gamma    2016-01 – 2018-05
+   └─ Maintained legacy systems</pre>
+</div>
+
+<div class="tui" id="evaluate">
+  <div class="tui-head"><span class="dot"></span> evaluate &mdash; score</div>
+  <pre>
+<span class="dim">Category Scores</span>
+┌──────────┬───────┬────────────────┬──────────────┐
+│ Category │ Score │ Bar            │ Evidence     │
+├──────────┼───────┼────────────────┼──────────────┤
+│ Open Src │ 18/35 │ █████░░░░░ 51% │ 2 minor PRs  │
+│ Projects │ 24/30 │ ████████░░ 80% │ Portfolio    │
+│ Productn │ 15/25 │ █████░░░░░ 60% │ 3 yrs exp    │
+│ Tech Ski │  8/10 │ ██████████ 80% │ Broad stack  │
+├──────────┼───────┼────────────────┼──────────────┤
+│ Total    │ 65/100│ Bonus: +5  -2 │ Final 68/120 │
+└──────────┴───────┴────────────────┴──────────────┘</pre>
+</div>
+
+<div class="pipeline">
+  <div class="pipeline-flow">PDF &rarr; Markdown &rarr; LLM &rarr; Structured Data &rarr; Rich TUI</div>
+  <p>PDFParser converts each page to clean Markdown. The Amphib orchestrator sends it to an LLM with Jinja2 prompts. Results render as tables, trees, panels, and color-coded score bars.</p>
+</div>
+
+<div class="footer">
+  <a href="https://github.com/grandimam/amphib">GitHub</a>
+  <a href="https://github.com/grandimam/amphib/blob/main/README.md">README</a>
+  <a href="https://github.com/grandimam/amphib/issues">Issues</a>
+  <a href="https://github.com/grandimam/amphib/blob/main/CONTRIBUTING.md">Contributing</a>
+</div>
+
+</div>
 </body>
 </html>

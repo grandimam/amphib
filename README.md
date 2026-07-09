@@ -1,7 +1,7 @@
 <p align="center">
-  <strong>Amphib 🐸</strong><br>
-  <em>Amphib. A better breed of hiring agent.</em><br>
-  Amphib reads a resume, extracts structured data with an LLM, and gives you a verdict. Fully offline if you want.
+  <strong>Amphib</strong><br>
+  <em>See through the resume. The truth is in the details.</em><br>
+  Reads a resume, extracts what matters, and shows you the full picture.
 </p>
 
 <p align="center">
@@ -18,14 +18,16 @@
 
 Our goal: take what HackerRank's [Hiring Agent](https://github.com/interviewstreet/hiring-agent) started and build on top of it. Better CLI, better output, cleaner code. Everything stays open source.
 
+Install it with `pip install -e .` and the `amphib` command is available anywhere in your terminal. Or use the one-liner above.
+
 Amphib turns a resume PDF into Markdown, runs it through LLM pipelines for layout analysis, data extraction, and scoring, then shows the results in a rich terminal UI.
 
 ## Commands
 
 ```bash
-python main.py analyze <resume.pdf>     # Analyze resume layout
-python main.py extract <resume.pdf>     # Extract structured data (JSON Resume)
-python main.py evaluate <resume.pdf>    # Score resume across 4 categories
+amphib analyze <resume.pdf>     # Analyze resume layout
+amphib extract <resume.pdf>     # Extract structured data (JSON Resume)
+amphib evaluate <resume.pdf>    # Score resume across 4 categories
 ```
 
 ### analyze (layout analysis)
@@ -142,12 +144,26 @@ PDF → Markdown → LLM → Structured Data → Rich TUI
 `PDFParser` uses `pymupdf4llm` to convert PDF pages to clean Markdown. Headings, links, and tables all survive the round trip.
 
 ### 2. Text → Structured Data
-The `core.Amphib` orchestrator sends the Markdown to an LLM with Jinja2 system prompts from `prompts/`. Each command (`analyze`, `extract`, `evaluate`) uses a different prompt template.
+The `core.Amphib` orchestrator sends the Markdown to an LLM with Jinja2 system prompts from `core/prompts/`. Each command (`analyze`, `extract`, `evaluate`) uses a different prompt template.
 
 ### 3. Rich TUI Output
 Results render with `rich`: tables, trees, panels, color-coded score bars, and progress spinners while the LLM works.
 
 ## Quick start
+
+### One-liner (Linux / macOS)
+
+```bash
+curl -sSL https://raw.githubusercontent.com/grandimam/amphib/main/install.sh | bash
+```
+
+Or if you prefer `wget`:
+
+```bash
+wget -qO- https://raw.githubusercontent.com/grandimam/amphib/main/install.sh | bash
+```
+
+This installs to `~/.amphib`, creates a venv, and symlinks the `amphib` command to `~/.local/bin/amphib`.
 
 ### Prerequisites
 
@@ -159,21 +175,21 @@ Results render with `rich`: tables, trees, panels, color-coded score bars, and p
 ```bash
 git clone <your-repo-url> && cd amphib
 python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+pip install -e .
 ```
 
 ### Configure
 
 ```bash
-cp .env.example .env   # add your OPENROUTER_API_KEY
+cp .env.example .env   # then edit .env with your OpenRouter API key
 ```
 
-### Run
+### Run on the sample resume
 
 ```bash
-python main.py analyze examples/resume.pdf
-python main.py extract examples/resume.pdf
-python main.py evaluate examples/resume.pdf
+amphib analyze examples/java-engineer.pdf
+amphib extract examples/java-engineer.pdf
+amphib evaluate examples/java-engineer.pdf
 ```
 
 ## Configuration
@@ -204,14 +220,10 @@ python main.py evaluate examples/resume.pdf
 │   └── providers/
 │       ├── base.py             # Provider protocols
 │       ├── chat.py             # OpenRouterProvider
-│       └── github.py           # GitHub data fetcher
-├── prompts/
+├── core/prompts/
 │   ├── layout.jinja            # Layout analysis prompt
 │   ├── extract.jinja           # Structured extraction prompt
 │   └── evaluate.jinja          # Resume scoring prompt
-├── models.py                   # Pydantic models (legacy)
-├── pdf.py                      # Legacy pipeline
-├── score.py                    # Legacy entry point
 ├── pyproject.toml
 ├── uv.lock
 └── requirements.txt

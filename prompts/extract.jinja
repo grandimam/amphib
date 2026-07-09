@@ -1,0 +1,110 @@
+You are an expert resume parser. Extract ALL resume sections from the provided markdown and format them according to the JSON Resume specification.
+
+--- The input resume markdown starts here ---
+
+{{ text_content }}
+
+--- The input resume markdown ends here ---
+
+Return ONLY a single JSON object with this complete structure:
+
+{
+  "basics": {
+    "name": "Full name",
+    "email": "Email address",
+    "phone": "Phone number",
+    "url": null,
+    "summary": "About Me or Summary text (if present)",
+    "location": {
+      "city": "City",
+      "countryCode": "Country code"
+    },
+    "profiles": [
+      {
+        "network": "Platform name (e.g. GitHub, LinkedIn, Portfolio)",
+        "url": "Full URL from the resume",
+        "username": "Username extracted from URL"
+      }
+    ]
+  },
+  "work": [
+    {
+      "name": "Company name",
+      "position": "Job title",
+      "startDate": "Start date (YYYY-MM)",
+      "endDate": "End date (YYYY-MM) or 'Present'",
+      "summary": "Job description",
+      "highlights": ["Achievement 1", "Achievement 2"]
+    }
+  ],
+  "education": [
+    {
+      "institution": "School/University name",
+      "area": "Field of study",
+      "studyType": "Degree type",
+      "startDate": "Start date (YYYY-MM)",
+      "endDate": "End date (YYYY-MM)",
+      "score": "GPA/Percentage"
+    }
+  ],
+  "skills": [
+    {
+      "name": "Skill category (e.g. Programming Languages, Tools)",
+      "level": null,
+      "keywords": ["Skill 1", "Skill 2"]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Project name",
+      "description": "Project description",
+      "url": "Project URL",
+      "technologies": ["Tech 1", "Tech 2"]
+    }
+  ],
+  "awards": [
+    {
+      "title": "Award name",
+      "date": "Award date (YYYY-MM)",
+      "awarder": "Awarding organization"
+    }
+  ]
+}
+
+**SECTION-SPECIFIC INSTRUCTIONS:**
+
+**Basics:**
+- If there is any About Me or Summary section, add that to the summary field
+- For profiles: ONLY extract URLs that are EXPLICITLY present in the resume markdown
+- Look for URLs in markdown format [text](url) or plain URLs
+- DO NOT create any URLs that are not in the original resume
+- DO NOT add generic platform URLs like "https://github.com" unless actually present
+- If no URLs are found, return an empty profiles array: "profiles": []
+- If URL format is github.io or personal domain, mark network as "Portfolio"
+- If there is any link at the header or a Portfolio link, add that as url in basics
+
+**Work:**
+- Date ranges often appear as "Start – End" or "Start - End" format
+- Separators can be hyphen "-", en dash "–", em dash "—", or the word "to"
+- If a position is current/ongoing, end date may be "Present", "Current", "Now", "Ongoing"
+- Dates might be "Month Year" or "MM/YYYY" or "YYYY" only
+
+**Education:**
+- Extract degree type, field of study, institution name, and dates
+- Include GPA/percentage if available as score
+
+**Skills:**
+- Group skills by category (e.g., "Programming Languages", "Frameworks", "Tools")
+- List individual skills under keywords
+
+**Projects:**
+- Include project name, description, URL, and technologies used
+
+**Awards:**
+- Include award name, date, and awarding organization
+
+**CRITICAL:**
+- Return ONLY valid JSON. Do not include any explanatory text, thinking process, markdown formatting, or &lt;think&gt; tags
+- Do not wrap the JSON in code fences or any other formatting
+- The response must be parseable by json.loads() directly
+- Omit any section that has no data — set it to null or omit the key entirely

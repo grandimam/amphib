@@ -1,3 +1,5 @@
+from typing import Union
+
 from core.config import settings
 from core.constants import CONTENT
 from core.constants import ROLE
@@ -9,9 +11,6 @@ from core.prompt import JinjaPromptProvider
 
 
 class Amphib:
-
-	TOP_P: float = 0.9
-	TEMPERATURE: float = 0.0
 
 	def __init__(
 			self,
@@ -27,9 +26,14 @@ class Amphib:
 			self,
 			file_path: str,
 			prompt_name: str,
+			*,
+			temperature: Union[float, None] = 0.0,
+			top_p: Union[float, None] = 0.9,
 	):
 		resume_content: str = self._parser.parse(file_path)
-		system_prompt: str = self._prompt_provider.get_template(prompt_name)
+		system_prompt: str = self._prompt_provider.get_template(
+			prompt_name, text_content=resume_content
+		)
 
 		return self._model_provider.chat(
 			model_name=settings.model_name,
@@ -43,6 +47,6 @@ class Amphib:
 					CONTENT: resume_content
 				},
 			],
-			temperature=self.TEMPERATURE,
-			top_p=self.TOP_P
+			temperature=temperature,
+			top_p=top_p
 		)

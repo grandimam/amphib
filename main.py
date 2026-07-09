@@ -1,9 +1,13 @@
 import typer
 
-from cli import analyze
+from cli.analyze import analyze
+from cli.evaluate import evaluate
+from cli.extract import extract
 
 app = typer.Typer()
-app.add_typer(analyze.app, name='analyze')
+app.command()(analyze)
+app.command()(evaluate)
+app.command()(extract)
 
 if __name__ == "__main__":
-	app()
+    app()

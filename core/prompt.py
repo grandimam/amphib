@@ -10,12 +10,13 @@ from jinja2 import Template
 
 from core.config import settings
 
-
 T = TypeVar("T")
 
 
 class PromptTemplate(Enum):
 	LAYOUT = 'layout'
+	EVALUATE = 'evaluate'
+	EXTRACT = 'extract'
 
 
 class PromptProvider[T](Protocol):
@@ -46,8 +47,8 @@ class JinjaPromptProvider(PromptProvider[str]):
 			name = filename.removesuffix(".jinja")
 			self._templates[name] = self.env.get_template(filename)
 
-	def get_template(self, prompt_section: str) -> str:
+	def get_template(self, prompt_section: str, **kwargs) -> str:
 		if prompt_section not in self._templates:
 			raise ValueError(f'{prompt_section} not found')
 		template: Template = self._templates.get(prompt_section)
-		return template.render()
+		return template.render(**kwargs)

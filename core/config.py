@@ -6,10 +6,13 @@ from pydantic_settings import SettingsConfigDict
 
 class Settings(BaseSettings):
 	openrouter_api_key: str
-	prompt_dir: str = "templates"
+	prompt_dir: str = "prompts"
 
 	app_name: str | None = 'Amphib'
 	model_name: str | None = 'openrouter/openai/gpt-3.5-turbo'
+	model_provider: str | None = 'openrouter'
+	prompt_provider: str | None = 'jinja'
+
 	model_config = SettingsConfigDict(
 		env_file=".env",
 		env_file_encoding="utf-8",

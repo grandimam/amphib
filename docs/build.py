@@ -2,7 +2,6 @@
 """Render Jinja templates to HTML for GitHub Pages."""
 
 import os
-import shutil
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -38,7 +37,7 @@ def main():
         output_path.write_text(html, encoding="utf-8")
         print(f"  ✓  {output_name}")
 
-    print(f"  ✓  assets/css/style.css (in place)")
+    print("  ✓  assets/css/style.css (in place)")
 
     print(f"\nDone — {len(PAGES)} pages built.")
 

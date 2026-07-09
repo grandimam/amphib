@@ -1,12 +1,10 @@
 import os
-import requests
-
-from core.schemas import GitHubProfile
-from core.schemas import GithubProjectInfo
-
 from typing import runtime_checkable
 
+import requests
+
 from core.providers.base import BaseClientProvider
+from core.schemas import GitHubProfile, GithubProjectInfo
 
 
 @runtime_checkable

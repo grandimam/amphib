@@ -1,16 +1,14 @@
-import os
 import typer
-
-from core.parsers import PDFParser
-from core.providers.chat import ModelProvider
-from core.prompt import PromptProvider
-from core.prompt import PromptTemplate
-
-from core.config import settings
+from rich import print
 
 from core import Amphib
 
-from rich import print
+from core.parsers import PDFParser
+from core.prompt import JinjaPromptProvider
+from core.prompt import PromptTemplate
+from core.providers.chat import OpenRouterProvider
+
+from core.config import settings
 
 app = typer.Typer()
 
@@ -19,9 +17,8 @@ app = typer.Typer()
 def run(file_path: str):
 	runner = Amphib(
 		parser=PDFParser(),
-		model_provider=ModelProvider(os.environ.get(settings.openrouter_api_key)),
-		prompt_provider=PromptProvider(settings.prompt_dir),
+		model_provider=OpenRouterProvider(settings.openrouter_api_key),
+		prompt_provider=JinjaPromptProvider(),
 	)
-	response = runner.run(file_path=file_path,  prompt_name=PromptTemplate.LAYOUT.value)
+	response = runner.run(file_path=file_path, prompt_name=PromptTemplate.LAYOUT.value)
 	print(response)
-

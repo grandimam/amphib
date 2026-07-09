@@ -1,5 +1,4 @@
-from typing import Protocol
-from typing import Union
+from typing import Protocol, Union
 
 
 class BaseLLMProvider(Protocol):

@@ -1,6 +1,7 @@
-from typing import List, Optional, Dict, Tuple, Any, Protocol, runtime_checkable
-from pydantic import BaseModel, Field, field_validator
 from enum import Enum
+from typing import Any, Dict, List, Optional, Protocol, runtime_checkable
+
+from pydantic import BaseModel, Field
 
 
 class ModelProvider(Enum):
@@ -327,9 +328,10 @@ class GeminiProvider:
         **kwargs
     ) -> Dict[str, Any]:
         """Send a chat request to Google Gemini API."""
+        import random
         import re
         import time
-        import random
+
         from google.api_core.exceptions import ResourceExhausted
 
         MAX_RETRIES = 5

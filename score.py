@@ -1,22 +1,23 @@
-import os
-import sys
+import csv
 import json
 import logging
-import csv
-from pdf import PDFHandler
-from github import fetch_and_display_github_info
-from models import JSONResume, EvaluationData
-from typing import List, Optional, Dict
-from evaluator import ResumeEvaluator
+import os
+import sys
 from pathlib import Path
+from typing import Optional
+
+from config import DEVELOPMENT_MODE
+from evaluator import ResumeEvaluator
+from github import fetch_and_display_github_info
+from models import EvaluationData, JSONResume
+from pdf import PDFHandler
 from prompt import DEFAULT_MODEL, MODEL_PARAMETERS
 from transform import (
-    transform_evaluation_response,
-    convert_json_resume_to_text,
-    convert_github_data_to_text,
     convert_blog_data_to_text,
+    convert_github_data_to_text,
+    convert_json_resume_to_text,
+    transform_evaluation_response,
 )
-from config import DEVELOPMENT_MODE
 
 logger = logging.getLogger(__name__)
 
@@ -66,7 +67,7 @@ def print_evaluation_results(
     max_possible_score = max_score + 20  # 120 (100 categories + 20 bonus)
     if total_score > max_possible_score:
         total_score = max_possible_score
-        print(f"⚠️  Warning: Total score capped at maximum possible value")
+        print("⚠️  Warning: Total score capped at maximum possible value")
 
     # Overall Score
     print(f"\n🎯 OVERALL SCORE: {total_score:.1f}/{max_score}")
@@ -141,7 +142,7 @@ def print_evaluation_results(
 
     # Key Strengths
     if hasattr(evaluation, "key_strengths") and evaluation.key_strengths:
-        print(f"\n✅ KEY STRENGTHS:")
+        print("\n✅ KEY STRENGTHS:")
         print("-" * 30)
         for i, strength in enumerate(evaluation.key_strengths, 1):
             print(f"  {i}. {strength}")
@@ -151,7 +152,7 @@ def print_evaluation_results(
         hasattr(evaluation, "areas_for_improvement")
         and evaluation.areas_for_improvement
     ):
-        print(f"\n🔧 AREAS FOR IMPROVEMENT:")
+        print("\n🔧 AREAS FOR IMPROVEMENT:")
         print("-" * 30)
         for i, area in enumerate(evaluation.areas_for_improvement, 1):
             print(f"  {i}. {area}")
@@ -245,7 +246,7 @@ def main(pdf_path):
 
     if not cache_loaded:
         logger.debug(
-            f"Extracting data from PDF"
+            "Extracting data from PDF"
             + (" and caching to " + cache_filename if DEVELOPMENT_MODE else "")
         )
         pdf_handler = PDFHandler()
@@ -302,7 +303,7 @@ def main(pdf_path):
 
         if github_profile:
             print(
-                f"Fetching GitHub data"
+                "Fetching GitHub data"
                 + (
                     " and caching to " + github_cache_filename
                     if DEVELOPMENT_MODE

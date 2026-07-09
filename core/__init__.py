@@ -1,13 +1,11 @@
-from core.parsers import BaseParser
-from core.template import PromptProvider
-
-from core.providers.chat import ModelProvider
-from core.constants import SYSTEM
-from core.constants import USER
+from core.config import settings
 from core.constants import CONTENT
 from core.constants import ROLE
-
-from core.config import settings
+from core.constants import SYSTEM
+from core.constants import USER
+from core.parsers import BaseParser
+from core.providers.chat import ModelProvider
+from core.prompt import JinjaPromptProvider
 
 
 class Amphib:
@@ -19,7 +17,7 @@ class Amphib:
 			self,
 			parser: BaseParser,
 			model_provider: ModelProvider,
-			prompt_provider: PromptProvider
+			prompt_provider: JinjaPromptProvider
 	):
 		self._parser = parser
 		self._model_provider = model_provider
@@ -29,24 +27,20 @@ class Amphib:
 			self,
 			file_path: str,
 			prompt_name: str,
-			model_name: str | None = settings.model_name,
 	):
-		parsed_resume: str = self._parser.parse(file_path)
-		if not parsed_resume:
-			raise Exception('Empty resume')
-
-		sys_prompt: str = self._prompt_provider.get(prompt_name)
+		resume_content: str = self._parser.parse(file_path)
+		system_prompt: str = self._prompt_provider.get_template(prompt_name)
 
 		return self._model_provider.chat(
-			model_name=model_name,
+			model_name=settings.model_name,
 			messages=[
 				{
 					ROLE: SYSTEM,
-					CONTENT: sys_prompt
+					CONTENT: system_prompt
 				},
 				{
 					ROLE: USER,
-					CONTENT: parsed_resume
+					CONTENT: resume_content
 				},
 			],
 			temperature=self.TEMPERATURE,

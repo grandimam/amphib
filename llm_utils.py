@@ -3,9 +3,10 @@ Utility functions for LLM providers.
 """
 
 import logging
-from typing import Any, Dict, Optional
-from models import ModelProvider, OllamaProvider, GeminiProvider
-from prompt import MODEL_PROVIDER_MAPPING, GEMINI_API_KEY
+from typing import Any
+
+from models import GeminiProvider, ModelProvider, OllamaProvider
+from prompt import GEMINI_API_KEY, MODEL_PROVIDER_MAPPING
 
 logger = logging.getLogger(__name__)
 

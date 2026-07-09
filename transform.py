@@ -1,5 +1,5 @@
-from typing import Dict, List, Optional
-import pdb
+from typing import Dict, List
+
 from models import JSONResume
 
 
@@ -894,7 +894,7 @@ def convert_github_data_to_text(github_data: dict) -> str:
 
     if "profile" in github_data:
         profile = github_data["profile"]
-        github_text += f"GitHub Profile:\n"
+        github_text += "GitHub Profile:\n"
         github_text += f"- Username: {profile.get('username', 'N/A')}\n"
         github_text += f"- Name: {profile.get('name', 'N/A')}\n"
         github_text += f"- Bio: {profile.get('bio', 'N/A')}\n"

@@ -1,9 +1,25 @@
+from typing import Union
+from typing import Protocol
+from core.types import MESSAGE
+
 import litellm
 
-from typing import Union
+
+class ModelProvider[T](Protocol):
+	type: str
+
+	def chat(
+			self,
+			model_name: str,
+			messages: MESSAGE,
+			*,
+			temperature: Union[float | None] = None,
+			top_p: Union[float | None] = None,
+	) -> T: ...
 
 
-class ModelProvider:
+class OpenRouterProvider(ModelProvider[str]):
+	type: str = 'openrouter'
 
 	def __init__(self, api_key: str):
 		self._api_key = api_key
@@ -11,7 +27,7 @@ class ModelProvider:
 	def chat(
 			self,
 			model_name: str,
-			messages: list,
+			messages: MESSAGE,
 			*,
 			temperature: Union[float | None] = None,
 			top_p: Union[float | None] = None,

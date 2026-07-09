@@ -1,39 +1,53 @@
 import os
-
 from enum import Enum
+from typing import Dict
+from typing import Protocol
+from typing import TypeVar
 
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
 from jinja2 import Template
 
-from typing import Dict
+from core.config import settings
+
+
+T = TypeVar("T")
 
 
 class PromptTemplate(Enum):
 	LAYOUT = 'layout'
 
 
-class PromptProvider:
+class PromptProvider[T](Protocol):
+	name: str
 
-	def __init__(self, prompt_dir: str):
-		self._prompt_dir = prompt_dir
+	def load_template(self): ...
+
+	def get_template(self, prompt_section: str) -> str: ...
+
+
+class JinjaPromptProvider(PromptProvider[str]):
+	name: str = 'jinja'
+
+	def __init__(self):
+		self._prompt_dir = settings.prompt_dir
 		self.env = Environment(
 			loader=FileSystemLoader(self._prompt_dir),
 			trim_blocks=True,
 			lstrip_blocks=True,
 		)
 		self._templates: Dict[str, Template] = {}
-		self._load()
+		self.load_template()
 
-	def _load(self):
+	def load_template(self):
 		for filename in os.listdir(self._prompt_dir):
 			if not filename.endswith(".jinja"):
 				continue
 			name = filename.removesuffix(".jinja")
 			self._templates[name] = self.env.get_template(filename)
 
-	def get(self, prompt_name):
-		if prompt_name not in self._templates:
-			raise ValueError(f'{prompt_name} not found')
-		template: Template = self._templates.get(prompt_name)
+	def get_template(self, prompt_section: str) -> str:
+		if prompt_section not in self._templates:
+			raise ValueError(f'{prompt_section} not found')
+		template: Template = self._templates.get(prompt_section)
 		return template.render()

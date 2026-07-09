@@ -1,8 +1,7 @@
-import pymupdf
-
-from pymupdf4llm import to_markdown
-
 from typing import Protocol
+
+import pymupdf
+from pymupdf4llm import to_markdown
 
 
 class BaseParser[T](Protocol):

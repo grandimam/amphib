@@ -8,7 +8,7 @@ class Settings(BaseSettings):
 	openrouter_api_key: str
 	prompt_dir: str = "prompts"
 
-	app_name: str | None = 'Amphib'
+	app_name: str | None = 'Karak Hire'
 	model_name: str | None = 'openrouter/openai/gpt-3.5-turbo'
 	model_provider: str | None = 'openrouter'
 	prompt_provider: str | None = 'jinja'

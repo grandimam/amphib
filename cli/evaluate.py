@@ -5,7 +5,7 @@ from rich.table import Table
 from rich.syntax import Syntax
 from rich import box
 
-from core import Amphib
+from core import KarakHire
 from core.config import settings
 
 from core.parsers import PDFParser
@@ -47,7 +47,7 @@ def _as_list(val):
 
 def evaluate(file_path: str):
     with console.status("[bold green]Parsing PDF..."):
-        runner = Amphib(
+        runner = KarakHire(
             parser=PDFParser(),
             model_provider=OpenRouterProvider(settings.openrouter_api_key),
             prompt_provider=JinjaPromptProvider(),

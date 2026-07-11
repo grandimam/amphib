@@ -3,7 +3,7 @@ requires = ["setuptools>=64"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "amphib"
+name = "karak-hire"
 version = "0.1.0"
 description = "LLM-powered resume analysis, extraction, and scoring"
 readme = "README.md"
@@ -11,7 +11,7 @@ license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.12"
 authors = [
-    { name = "Amphib Contributors" },
+    { name = "Karak Contributors" },
 ]
 keywords = ["resume", "parsing", "llm", "hiring", "recruitment"]
 classifiers = [
@@ -40,11 +40,11 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/grandimam/amphib"
-Repository = "https://github.com/grandimam/amphib"
+Homepage = "https://github.com/karakcore/karak-hire"
+Repository = "https://github.com/karakcore/karak-hire"
 
 [project.scripts]
-amphib = "cli:main"
+karak-hire = "cli:main"
 
 [tool.setuptools.packages.find]
 include = ["cli*", "core*"]

@@ -1,12 +1,12 @@
 <p align="center">
-  <strong>Amphib</strong><br>
+  <strong>Karak Hire</strong><br>
   <em>See through the resume. The truth is in the details.</em><br>
   Reads a resume, extracts what matters, and shows you the full picture.
 </p>
 
 <p align="center">
-  <a href="https://amphib.dev">
-    <img alt="Website" src="https://img.shields.io/badge/web-amphib.dev-8B5CF6.svg">
+  <a href="https://hire.karak.dev">
+    <img alt="Website" src="https://img.shields.io/badge/web-hire.karak.dev-8B5CF6.svg">
   </a>
   <a href="https://www.python.org/downloads/release/python-3110/">
     <img alt="Python" src="https://img.shields.io/badge/python-3.12%2B-blue.svg">
@@ -16,18 +16,18 @@
   </a>
 </p>
 
-Our goal: take what HackerRank's [Hiring Agent](https://github.com/interviewstreet/hiring-agent) started and build on top of it. Better CLI, better output, cleaner code. Everything stays open source.
+Part of the [Karak](https://karak.dev) ecosystem. Our goal: take what HackerRank's [Hiring Agent](https://github.com/interviewstreet/hiring-agent) started and build on top of it. Better CLI, better output, cleaner code. Everything stays open source.
 
-Install it with `pip install -e .` and the `amphib` command is available anywhere in your terminal. Or use the one-liner above.
+Install it with `pip install -e .` and the `karak-hire` command is available anywhere in your terminal. Or use the one-liner above.
 
-Amphib turns a resume PDF into Markdown, runs it through LLM pipelines for layout analysis, data extraction, and scoring, then shows the results in a rich terminal UI.
+Karak Hire turns a resume PDF into Markdown, runs it through LLM pipelines for layout analysis, data extraction, and scoring, then shows the results in a rich terminal UI.
 
 ## Commands
 
 ```bash
-amphib analyze <resume.pdf>     # Analyze resume layout
-amphib extract <resume.pdf>     # Extract structured data (JSON Resume)
-amphib evaluate <resume.pdf>    # Score resume across 4 categories
+karak-hire analyze <resume.pdf>     # Analyze resume layout
+karak-hire extract <resume.pdf>     # Extract structured data (JSON Resume)
+karak-hire evaluate <resume.pdf>    # Score resume across 4 categories
 ```
 
 ### analyze (layout analysis)
@@ -144,7 +144,7 @@ PDF → Markdown → LLM → Structured Data → Rich TUI
 `PDFParser` uses `pymupdf4llm` to convert PDF pages to clean Markdown. Headings, links, and tables all survive the round trip.
 
 ### 2. Text → Structured Data
-The `core.Amphib` orchestrator sends the Markdown to an LLM with Jinja2 system prompts from `core/prompts/`. Each command (`analyze`, `extract`, `evaluate`) uses a different prompt template.
+The `core.KarakHire` orchestrator sends the Markdown to an LLM with Jinja2 system prompts from `core/prompts/`. Each command (`analyze`, `extract`, `evaluate`) uses a different prompt template.
 
 ### 3. Rich TUI Output
 Results render with `rich`: tables, trees, panels, color-coded score bars, and progress spinners while the LLM works.
@@ -154,16 +154,16 @@ Results render with `rich`: tables, trees, panels, color-coded score bars, and p
 ### One-liner (Linux / macOS)
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/grandimam/amphib/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/karakcore/karak-hire/main/install.sh | bash
 ```
 
 Or if you prefer `wget`:
 
 ```bash
-wget -qO- https://raw.githubusercontent.com/grandimam/amphib/main/install.sh | bash
+wget -qO- https://raw.githubusercontent.com/karakcore/karak-hire/main/install.sh | bash
 ```
 
-This installs to `~/.amphib`, creates a venv, and symlinks the `amphib` command to `~/.local/bin/amphib`.
+This installs to `~/.karak-hire`, creates a venv, and symlinks the `karak-hire` command to `~/.local/bin/karak-hire`.
 
 ### Prerequisites
 
@@ -173,7 +173,7 @@ This installs to `~/.amphib`, creates a venv, and symlinks the `amphib` command 
 ### Setup
 
 ```bash
-git clone <your-repo-url> && cd amphib
+git clone <your-repo-url> && cd karak-hire
 python -m venv .venv && source .venv/bin/activate
 pip install -e .
 ```
@@ -187,9 +187,9 @@ cp .env.example .env   # then edit .env with your OpenRouter API key
 ### Run on the sample resume
 
 ```bash
-amphib analyze examples/java-engineer.pdf
-amphib extract examples/java-engineer.pdf
-amphib evaluate examples/java-engineer.pdf
+karak-hire analyze examples/java-engineer.pdf
+karak-hire extract examples/java-engineer.pdf
+karak-hire evaluate examples/java-engineer.pdf
 ```
 
 ## Configuration
@@ -210,7 +210,7 @@ amphib evaluate examples/java-engineer.pdf
 │   ├── extract.py              # Structured extraction command
 │   └── evaluate.py             # Scoring command
 ├── core/
-│   ├── __init__.py             # Amphib orchestrator
+│   ├── __init__.py             # KarakHire orchestrator
 │   ├── config.py               # Pydantic settings
 │   ├── constants.py            # Role/content constants
 │   ├── parsers.py              # PDFParser (pymupdf4llm)
@@ -233,19 +233,19 @@ amphib evaluate examples/java-engineer.pdf
 
 We started from HackerRank's [Hiring Agent](https://github.com/interviewstreet/hiring-agent) and rebuilt most of it. Here is what we think it got wrong:
 
-**Too many entry points.** Hiring Agent had `score.py`, `pdf.py`, `github.py` all doing overlapping things. You had to dig through the code to figure out which script to run. Amphib has three commands: `analyze`, `extract`, `evaluate`. One entry point (`main.py`), consistent flags.
+**Too many entry points.** Hiring Agent had `score.py`, `pdf.py`, `github.py` all doing overlapping things. You had to dig through the code to figure out which script to run. Karak Hire has three commands: `analyze`, `extract`, `evaluate`. One entry point (`main.py`), consistent flags.
 
-**No feedback while it runs.** You ran `score.py` and stared at a blank terminal for 30 seconds. Amphib shows a spinner with status messages so you know it is actually working.
+**No feedback while it runs.** You ran `score.py` and stared at a blank terminal for 30 seconds. Karak Hire shows a spinner with status messages so you know it is actually working.
 
-**Raw JSON dumps.** The output was unformatted JSON blobs. Amphib renders tables, trees, panels, and color-coded bars so you can actually read the results.
+**Raw JSON dumps.** The output was unformatted JSON blobs. Karak Hire renders tables, trees, panels, and color-coded bars so you can actually read the results.
 
-**Single-use architecture.** The old code mixed PDF parsing, LLM calls, GitHub fetching, and scoring into one tangled flow. Amphib splits these into a `core` module with clean interfaces. You can swap parsers, model providers, or prompt loaders without rewriting everything.
+**Single-use architecture.** The old code mixed PDF parsing, LLM calls, GitHub fetching, and scoring into one tangled flow. Karak Hire splits these into a `core` module with clean interfaces. You can swap parsers, model providers, or prompt loaders without rewriting everything.
 
-**Prompt templates scattered.** Templates were spread across files with no clear naming convention. Amphib keeps them in `prompts/` with one file per command. The `JinjaPromptProvider` loads them automatically.
+**Prompt templates scattered.** Templates were spread across files with no clear naming convention. Karak Hire keeps them in `prompts/` with one file per command. The `JinjaPromptProvider` loads them automatically.
 
-**Template variables were not being passed.** The `{{ text_content }}` variables in the prompts rendered as empty strings because nobody called `template.render()` with the resume text. The resume was sent in the user message but the system prompt had a blank where the resume should have been. Amphib passes the parsed text into the template so the LLM sees the full context.
+**Template variables were not being passed.** The `{{ text_content }}` variables in the prompts rendered as empty strings because nobody called `template.render()` with the resume text. The resume was sent in the user message but the system prompt had a blank where the resume should have been. Karak Hire passes the parsed text into the template so the LLM sees the full context.
 
-**GitHub overreach.** Hiring Agent spends a lot of effort fetching GitHub profiles and classifying repos. That is useful but it should not be the main pipeline. Amphib keeps GitHub as a separate provider you can call if you want, not something baked into every resume scan.
+**GitHub overreach.** Hiring Agent spends a lot of effort fetching GitHub profiles and classifying repos. That is useful but it should not be the main pipeline. Karak Hire keeps GitHub as a separate provider you can call if you want, not something baked into every resume scan.
 
 We are not done. There is more to fix. But every change stays open source.
 
@@ -255,4 +255,4 @@ We are not done. There is more to fix. But every change stays open source.
 
 ## Acknowledgments
 
-Amphib is built on [Hiring Agent](https://github.com/interviewstreet/hiring-agent) by HackerRank. Their open-source work made this possible. We are committed to keeping it going.
+Karak Hire is built on [Hiring Agent](https://github.com/interviewstreet/hiring-agent) by HackerRank. Their open-source work made this possible. We are committed to keeping it going.

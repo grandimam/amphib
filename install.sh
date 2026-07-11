@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO="grandimam/amphib"
+REPO="karakcore/karak-hire"
 BRANCH="main"
 
 GREEN='\033[0;32m'
@@ -31,7 +31,7 @@ fi
 ok "Python $PYVER"
 
 # --- create directory ---
-INSTALL_DIR="${AMPHIB_DIR:-$HOME/.amphib}"
+INSTALL_DIR="${KARAK_HIRE_DIR:-$HOME/.karak-hire}"
 if [ -d "$INSTALL_DIR" ]; then
     warn "Directory $INSTALL_DIR already exists."
 else
@@ -42,22 +42,22 @@ fi
 cd "$INSTALL_DIR"
 
 # --- download source ---
-info "Downloading amphib..."
+info "Downloading karak-hire..."
 TMP=$(mktemp -d)
 trap 'rm -rf $TMP' EXIT
 
 if command -v curl &>/dev/null; then
-    curl -sSL "https://api.github.com/repos/$REPO/tarball/$BRANCH" -o "$TMP/amphib.tar.gz"
+    curl -sSL "https://api.github.com/repos/$REPO/tarball/$BRANCH" -o "$TMP/karak-hire.tar.gz"
 elif command -v wget &>/dev/null; then
-    wget -q "https://api.github.com/repos/$REPO/tarball/$BRANCH" -O "$TMP/amphib.tar.gz"
+    wget -q "https://api.github.com/repos/$REPO/tarball/$BRANCH" -O "$TMP/karak-hire.tar.gz"
 else
     err "Need curl or wget to download."
 fi
 
-tar -xzf "$TMP/amphib.tar.gz" -C "$TMP"
-SRC_DIR=$(find "$TMP" -maxdepth 2 -type d -name 'amphib-*' | head -1)
+tar -xzf "$TMP/karak-hire.tar.gz" -C "$TMP"
+SRC_DIR=$(find "$TMP" -maxdepth 2 -type d -name 'karak-hire-*' | head -1)
 if [ -z "$SRC_DIR" ]; then
-    SRC_DIR=$(find "$TMP" -maxdepth 2 -type d -name 'grandimam-amphib-*' | head -1)
+    SRC_DIR=$(find "$TMP" -maxdepth 2 -type d -name 'karakcore-karak-hire-*' | head -1)
 fi
 if [ -z "$SRC_DIR" ]; then
     err "Could not find source directory in the archive."
@@ -90,25 +90,25 @@ else
 fi
 
 # --- symlink ---
-LINK_TARGET="${AMPHIB_LINK:-$HOME/.local/bin}"
+LINK_TARGET="${KARAK_HIRE_LINK:-$HOME/.local/bin}"
 if [ -d "$LINK_TARGET" ]; then
-    if [ -f "$LINK_TARGET/amphib" ]; then
-        rm "$LINK_TARGET/amphib"
+    if [ -f "$LINK_TARGET/karak-hire" ]; then
+        rm "$LINK_TARGET/karak-hire"
     fi
-    ln -s "$INSTALL_DIR/.venv/bin/amphib" "$LINK_TARGET/amphib"
-    ok "Linked amphib to $LINK_TARGET/amphib"
+    ln -s "$INSTALL_DIR/.venv/bin/karak-hire" "$LINK_TARGET/karak-hire"
+    ok "Linked karak-hire to $LINK_TARGET/karak-hire"
     echo ""
     info "Make sure $LINK_TARGET is in your PATH:"
     echo "  export PATH=\"\$PATH:$LINK_TARGET\""
 else
     warn "$LINK_TARGET does not exist. Skipping symlink."
-    info "Run amphib directly:"
-    echo "  $INSTALL_DIR/.venv/bin/amphib --help"
+    info "Run karak-hire directly:"
+    echo "  $INSTALL_DIR/.venv/bin/karak-hire --help"
 fi
 
 echo ""
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${GREEN}  amphib installed!${NC}"
+echo -e "${GREEN}  karak-hire installed!${NC}"
 echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 echo "  Next steps:"
@@ -117,7 +117,7 @@ echo "     Add your OpenRouter API key:"
 echo "     OPENROUTER_API_KEY=sk-or-v1-..."
 echo ""
 echo "  2. Run on a sample resume:"
-echo "     amphib analyze $INSTALL_DIR/examples/java-engineer.pdf"
-echo "     amphib extract $INSTALL_DIR/examples/java-engineer.pdf"
-echo "     amphib evaluate $INSTALL_DIR/examples/java-engineer.pdf"
+echo "     karak-hire analyze $INSTALL_DIR/examples/java-engineer.pdf"
+echo "     karak-hire extract $INSTALL_DIR/examples/java-engineer.pdf"
+echo "     karak-hire evaluate $INSTALL_DIR/examples/java-engineer.pdf"
 echo ""

@@ -1,12 +1,12 @@
 # Contributing Guidelines
 
-Thanks for your interest in improving Amphib. Contributions are welcome, including documentation updates, bug reports, feature requests, and code changes.
+Thanks for your interest in improving Karak Hire. Contributions are welcome, including documentation updates, bug reports, feature requests, and code changes.
 
 ## Reporting Bugs
 
 1. Check that the bug has not already been reported.
 2. Open a new issue with a clear description of the issue and expected behavior.
-3. Include environment info: OS, Python version, Amphib commit or version, steps to reproduce, and relevant logs or stack traces.
+3. Include environment info: OS, Python version, Karak Hire commit or version, steps to reproduce, and relevant logs or stack traces.
 
 > [!TIP]
 > If the bug involves PDF parsing or model output, attach a minimal PDF and the exact model you used.

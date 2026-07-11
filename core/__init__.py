@@ -10,7 +10,7 @@ from core.providers.chat import ModelProvider
 from core.prompt import JinjaPromptProvider
 
 
-class Amphib:
+class KarakHire:
 
 	def __init__(
 			self,
